@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "500253063067",
+    "firebase_url": "https://sensorproject-ee4c6.firebaseio.com",
+    "project_id": "sensorproject-ee4c6",
+    "storage_bucket": "sensorproject-ee4c6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:500253063067:android:a994d7ff85dbc347",
+        "android_client_info": {
+          "package_name": "com.me.adameastham.smartlab"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "500253063067-u3l8lm5acpmegd9vtjtgbdemv2jfd707.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.me.adameastham.smartlab",
+            "certificate_hash": "7705b6afac72f4493cf1181d952d8ff2dfb81104"
+          }
+        },
+        {
+          "client_id": "500253063067-vrbgi4qu4lqid4l91ve0l9atkh4513le.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAclkPJDjKYZ2zWzJht2vodHyDsacz00qg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "500253063067-vrbgi4qu4lqid4l91ve0l9atkh4513le.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
