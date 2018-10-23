@@ -16,6 +16,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Interactions"
+            android:screenOrientation="portrait"
+            android:label="Interactions"></activity>
+        <activity
+            android:name=".Zone1"
+            android:screenOrientation="portrait"
+            android:label="Zone 1 Logs"></activity>
+        <activity
+            android:name=".Zone2"
+            android:screenOrientation="portrait"
+            android:label="Zone 2 Logs"></activity>
+        <activity
+            android:name=".Zone3"
+            android:screenOrientation="portrait"
+            android:label="Zone 3 Logs"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.me.adameastham.payrollin.MainActivity">
+    <item
+        android:id="@+id/zone1"
+        android:title="Zone 1"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/zone2"
+        android:title="Zone 2"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/zone3"
+        android:title="Zone 3"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/Interactions"
+        android:title="Interactions"
+        app:showAsAction="always" />
+</menu>
