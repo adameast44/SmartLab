@@ -40,9 +40,11 @@ public class Zone1 extends AppCompatActivity {
                 int count = 0;
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                    //filter for zone
                     if (singleSnapshot.child("Zone").getValue().toString().equals("Zone1")) {
                         tempList[count] = " ";
                         for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
+                            //build string
                             if (!insideSnapshot.getKey().toString().equals("Zone")) {
                                 tempList[count] = insideSnapshot.getValue().toString() + " - " + tempList[count];
                                 Log.i("OUTPUT" ,insideSnapshot.getValue().toString());
@@ -53,18 +55,20 @@ public class Zone1 extends AppCompatActivity {
                     }
                 }
 
+                //remove empty elements and invert order
                 String[] listItems = new String[count];
                 for (int i=0; i<count; i++){
-                    listItems[i] = tempList[i];
+                    listItems[i] = tempList[count-i-1];
                 }
 
+                //insert data into list view
                 adapter=new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_layout, R.id.list_content, listItems);
                 listView.setAdapter(adapter);
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Failed to read value
+                // Failed to read values
                 Log.w("MyApp", "Failed to read value.", error.toException());
             }
         });

@@ -2,6 +2,7 @@ package com.me.adameastham.smartlab;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        boolean isLoggedIn = false;
+
+        //Zone 1 UI elements
         txtZ1out = findViewById(R.id.txtZ1Out);
         zone1G1 = findViewById(R.id.zone1G1);
         zone1G2 = findViewById(R.id.zone1G2);
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         zone1G2.setEndValue(100);
         zone1G3.setEndValue(100);
 
+        //Zone 2 UI elements
         txtZ2out = findViewById(R.id.txtZ2Out);
         zone2G1 = findViewById(R.id.zone2G1);
         zone2G2 = findViewById(R.id.zone2G2);
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         zone2G2.setEndValue(100);
         zone2G3.setEndValue(100);
 
+        //Zone 3 UI elements
         txtZ3out = findViewById(R.id.txtZ3Out);
         zone3G1 = findViewById(R.id.zone3G1);
         zone3G2 = findViewById(R.id.zone3G2);
@@ -107,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             protected void onPostExecute(String msg) {
                 // Show Toast containing message from doInBackground
-                Toaster.s(MainActivity.this, msg);
+                Toaster.l(MainActivity.this, msg);
             }
         }.execute();
 
@@ -127,11 +133,14 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     JSONObject data = null;
                                     try {
+                                        //parse data to JSON
                                         data = new JSONObject(event1.dataPayload.toString());
+                                        //output to gauges
                                         zone1G1.setValue((int)data.getDouble("temp"));
                                         zone1G2.setValue((int)data.getDouble("hum"));
                                         zone1G3.setValue((int)data.getDouble("ambL"));
-                                        txtZ1out.setText("     "+ String.format("%.2f", data.getDouble("temp"))+"          "
+                                        //output string
+                                        txtZ1out.setText("   "+ String.format("%.2f", data.getDouble("temp"))+"°C       "
                                                 +String.format("%.2f", data.getDouble("hum"))+"%         "
                                                 +String.format("%.2f", data.getDouble("ambL")));
 
@@ -144,11 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
                         public void onEventError(Exception e) {
                             Log.e("MyAPP", "Event error: ", e);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                }
-                            });
                         }
                     });
                     // Subscribe to zone 2 event
@@ -162,11 +166,14 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     JSONObject data = null;
                                     try {
+                                        //parse data to JSON
                                         data = new JSONObject(event2.dataPayload.toString());
+                                        //output to gauges
                                         zone2G1.setValue((int)data.getDouble("temp"));
                                         zone2G2.setValue((int)data.getDouble("hum"));
                                         zone2G3.setValue((int)data.getDouble("ambL"));
-                                        txtZ2out.setText("     "+ String.format("%.2f", data.getDouble("temp"))+"          "+String.format("%.2f", data.getDouble("hum"))+"%         "+String.format("%.2f", data.getDouble("ambL")));
+                                        //output string
+                                        txtZ2out.setText("   "+ String.format("%.2f", data.getDouble("temp"))+"°C       "+String.format("%.2f", data.getDouble("hum"))+"%         "+String.format("%.2f", data.getDouble("ambL")));
 
                                     }catch(JSONException e){
                                         e.printStackTrace();
@@ -177,11 +184,6 @@ public class MainActivity extends AppCompatActivity {
 
                         public void onEventError(Exception e) {
                             Log.e("MyAPP", "Event error: ", e);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                }
-                            });
                         }
                     });
                     // Subscribe to zone 3 event
@@ -195,11 +197,14 @@ public class MainActivity extends AppCompatActivity {
                                 public void run() {
                                     JSONObject data = null;
                                     try {
+                                        //parse data to JSON
                                         data = new JSONObject(event3.dataPayload.toString());
+                                        //output to gauges
                                         zone3G1.setValue((int)data.getDouble("temp"));
                                         zone3G2.setValue((int)data.getDouble("hum"));
                                         zone3G3.setValue((int)data.getDouble("ambL"));
-                                        txtZ3out.setText("     "+ String.format("%.2f", data.getDouble("temp"))+"          "+String.format("%.2f", data.getDouble("hum"))+"%         "+String.format("%.2f", data.getDouble("ambL")));
+                                        //output string
+                                        txtZ3out.setText("   "+ String.format("%.2f", data.getDouble("temp"))+"°C       "+String.format("%.2f", data.getDouble("hum"))+"%         "+String.format("%.2f", data.getDouble("ambL")));
 
                                     }catch(JSONException e){
                                         e.printStackTrace();
@@ -210,11 +215,6 @@ public class MainActivity extends AppCompatActivity {
 
                         public void onEventError(Exception e) {
                             Log.e("MyAPP", "Event error: ", e);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                }
-                            });
                         }
                     });
                     return "Subscribed!";
@@ -226,7 +226,13 @@ public class MainActivity extends AppCompatActivity {
             }
         // This code is run after the doInBackground code finishes
         protected void onPostExecute(String msg) {
-            Toaster.s(MainActivity.this, msg);
+                //wait for previous toast to finish
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Toaster.s(MainActivity.this, msg);
+                }
+            }, 2000);
         }
         }.execute();
     }

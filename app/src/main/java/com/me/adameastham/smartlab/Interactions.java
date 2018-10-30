@@ -57,17 +57,20 @@ public class Interactions extends AppCompatActivity {
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
                     tempList[count] = " ";
+                    //Build string
                     for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
                         tempList[count] = insideSnapshot.getValue().toString() + "     " + tempList[count];
                     }
                     count++;
                 }
 
+                //remove empty elements and invert order.
                 String[] listItems = new String[count];
                 for (int i=0; i<count; i++){
-                    listItems[i] = tempList[i];
+                    listItems[i] = tempList[count-i-1];
                 }
 
+                //insert data into list view
                 adapter=new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_layout, R.id.list_content, listItems);
                 listView.setAdapter(adapter);
             }

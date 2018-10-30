@@ -40,10 +40,12 @@ public class Zone2 extends AppCompatActivity {
                 int count = 0;
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                    //filter by zone
                     if (singleSnapshot.child("Zone").getValue().toString().equals("Zone2")) {
                         tempList[count] = " ";
                         for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
                             if (!insideSnapshot.getKey().toString().equals("Zone")) {
+                                //build string
                                 tempList[count] = insideSnapshot.getValue().toString() + " - " + tempList[count];
                                 Log.i("OUTPUT" ,insideSnapshot.getValue().toString());
                             }
@@ -53,11 +55,13 @@ public class Zone2 extends AppCompatActivity {
                     }
                 }
 
+                //remove empty elements and invert order
                 String[] listItems = new String[count];
                 for (int i=0; i<count; i++){
-                    listItems[i] = tempList[i];
+                    listItems[i] = tempList[count-i-1];
                 }
 
+                //insert data into list view
                 adapter=new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_layout, R.id.list_content, listItems);
                 listView.setAdapter(adapter);
             }

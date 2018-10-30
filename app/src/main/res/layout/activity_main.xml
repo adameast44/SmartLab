@@ -16,84 +16,153 @@
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="     Temp        Humidity        Light"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimaryDark"/>
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:id="@+id/zone1Group"
-        android:paddingLeft="160dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone1G1"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugeStartAngle="135"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeStartValue="0"
-            app:gaugeEndValue="100"
-            app:gaugeSweepAngle="270" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone1G2"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugeEndValue="100"
-            app:gaugePointEndColor="@color/md_blue_800"
-            app:gaugePointStartColor="@color/md_blue_300"
-            app:gaugeStartAngle="135"
-            app:gaugeStartValue="0"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Temp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone1G3"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugeStartAngle="135"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeStartValue="0"
-            app:gaugeEndValue="100"
-            app:gaugeSweepAngle="270" />
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone1G1"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugePointStartColor="@color/md_red_500"
+                app:gaugePointEndColor="@color/md_red_500"
+                app:gaugePointSize="6"
+                app:gaugeStartAngle="135"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeStartValue="0"
+                app:gaugeEndValue="100"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Humdity"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone1G2"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugeEndValue="100"
+                app:gaugePointEndColor="@color/md_blue_800"
+                app:gaugePointStartColor="@color/md_blue_300"
+                app:gaugeStartAngle="135"
+                app:gaugeStartValue="0"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Light"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone1G3"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugePointStartColor="@color/md_red_500"
+                app:gaugePointEndColor="@color/md_red_500"
+                app:gaugePointSize="6"
+                app:gaugeStartAngle="135"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeStartValue="0"
+                app:gaugeEndValue="100"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtZ1Out"
+        android:id="@+id/txtZ2Out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="                     Connecting..."
+        android:textAlignment="center"
+        android:text="Connecting..."
         android:textSize="30sp"
         android:textColor="@color/colorPrimaryDark"/>
 
@@ -110,92 +179,160 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:text="Zone 2"
+        android:text="Zone 1"
         android:textSize="40sp"
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="     Temp        Humidity        Light"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimaryDark"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:id="@+id/zone2Group"
         android:layout_height="wrap_content"
-        android:paddingLeft="160dp"
         android:orientation="horizontal">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone2G1"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugeStartAngle="135"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeStartValue="0"
-            app:gaugeEndValue="100"
-            app:gaugeSweepAngle="270" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone2G2"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugeEndValue="100"
-            app:gaugePointEndColor="@color/md_blue_800"
-            app:gaugePointStartColor="@color/md_blue_300"
-            app:gaugeStartAngle="135"
-            app:gaugeStartValue="0"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Temp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone2G3"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugeStartAngle="135"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeStartValue="0"
-            app:gaugeEndValue="100"
-            app:gaugeSweepAngle="270" />
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone2G1"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugePointStartColor="@color/md_red_500"
+                app:gaugePointEndColor="@color/md_red_500"
+                app:gaugePointSize="6"
+                app:gaugeStartAngle="135"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeStartValue="0"
+                app:gaugeEndValue="100"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Humdity"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone2G2"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugeEndValue="100"
+                app:gaugePointEndColor="@color/md_blue_800"
+                app:gaugePointStartColor="@color/md_blue_300"
+                app:gaugeStartAngle="135"
+                app:gaugeStartValue="0"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Light"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone2G3"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugePointStartColor="@color/md_red_500"
+                app:gaugePointEndColor="@color/md_red_500"
+                app:gaugePointSize="6"
+                app:gaugeStartAngle="135"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeStartValue="0"
+                app:gaugeEndValue="100"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtZ2Out"
+        android:id="@+id/txtZ3Out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="                     Connecting..."
+        android:textAlignment="center"
+        android:text="Connecting..."
         android:textSize="30sp"
         android:textColor="@color/colorPrimaryDark"/>
-
 
     <View
         android:layout_width="match_parent"
@@ -209,90 +346,176 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:text="Zone 3"
+        android:text="Zone 1"
         android:textSize="40sp"
         android:textColor="@color/colorPrimaryDark"
         android:textAlignment="center"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="     Temp        Humidity        Light"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimaryDark"/>
-
     <LinearLayout
-        android:id="@+id/zone3Group"
         android:layout_width="fill_parent"
+        android:id="@+id/zone3Group"
         android:layout_height="wrap_content"
-        android:paddingLeft="160dp"
         android:orientation="horizontal">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone3G1"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            app:gaugeEndValue="100"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugeStartAngle="135"
-            app:gaugeStartValue="0"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone3G2"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            app:gaugeEndValue="100"
-            app:gaugePointEndColor="@color/md_blue_800"
-            app:gaugePointStartColor="@color/md_blue_300"
-            app:gaugeStartAngle="135"
-            app:gaugeStartValue="0"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Temp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
 
-        <pl.pawelkleczkowski.customgauge.CustomGauge
-            android:id="@+id/zone3G3"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            app:gaugeEndValue="100"
-            app:gaugePointEndColor="@color/md_red_500"
-            app:gaugePointSize="6"
-            app:gaugePointStartColor="@color/md_red_500"
-            app:gaugeStartAngle="135"
-            app:gaugeStartValue="0"
-            app:gaugeStrokeCap="ROUND"
-            app:gaugeStrokeColor="@color/md_grey_400"
-            app:gaugeStrokeWidth="10dp"
-            app:gaugeSweepAngle="270" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <pl.pawelkleczkowski.customgauge.CustomGauge
+                    android:id="@+id/zone3G1"
+                    android:layout_centerInParent="true"
+                    android:layout_width="130dp"
+                    android:layout_height="120dp"
+                    app:gaugePointStartColor="@color/md_red_500"
+                    app:gaugePointEndColor="@color/md_red_500"
+                    app:gaugePointSize="6"
+                    app:gaugeStartAngle="135"
+                    app:gaugeStrokeCap="ROUND"
+                    app:gaugeStrokeColor="@color/md_grey_400"
+                    app:gaugeStrokeWidth="10dp"
+                    app:gaugeStartValue="0"
+                    app:gaugeEndValue="100"
+                    app:gaugeSweepAngle="270" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Humdity"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone3G2"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugeEndValue="100"
+                app:gaugePointEndColor="@color/md_blue_800"
+                app:gaugePointStartColor="@color/md_blue_300"
+                app:gaugeStartAngle="135"
+                app:gaugeStartValue="0"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="Light"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+            <pl.pawelkleczkowski.customgauge.CustomGauge
+                android:id="@+id/zone3G3"
+                android:layout_width="130dp"
+                android:layout_height="120dp"
+                android:paddingTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="10dp"
+                app:gaugePointStartColor="@color/md_red_500"
+                app:gaugePointEndColor="@color/md_red_500"
+                app:gaugePointSize="6"
+                app:gaugeStartAngle="135"
+                app:gaugeStrokeCap="ROUND"
+                app:gaugeStrokeColor="@color/md_grey_400"
+                app:gaugeStrokeWidth="10dp"
+                app:gaugeStartValue="0"
+                app:gaugeEndValue="100"
+                app:gaugeSweepAngle="270" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textAlignment="center"
+                android:text="75"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtZ3Out"
+        android:id="@+id/txtZ1Out"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"
-        android:paddingLeft="160dp"
-        android:text="                     Connecting..."
+        android:textAlignment="center"
+        android:text="Connecting..."
         android:textSize="30sp"
         android:textColor="@color/colorPrimaryDark"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimary" />
+
+
+
+
+
+
 
 </LinearLayout>
