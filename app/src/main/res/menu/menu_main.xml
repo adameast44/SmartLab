@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.me.adameastham.payrollin.MainActivity">
     <item
+        android:id="@+id/Location"
+        android:title="Location"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/zone1"
         android:title="Zone 1"
         app:showAsAction="always" />

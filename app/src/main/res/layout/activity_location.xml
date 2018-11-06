@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txtEnterName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:text="Enter your hotspot name:"
+        android:textSize="25sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/txtHotspotName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:inputType="textPersonName"/>
+
+    <ToggleButton
+        android:id="@+id/togButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@color/md_blue_50"
+        android:textOn="Stop Locating"
+        android:textOff="Start Locating" />
+
+    <TextView
+        android:id="@+id/txtWifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:textSize="25sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAlignment="center"/>
+
+
+</LinearLayout>
