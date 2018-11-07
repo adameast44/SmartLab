@@ -43,7 +43,6 @@ import pl.pawelkleczkowski.customgauge.CustomGauge;
 public class MainActivity extends AppCompatActivity {
 
     private TextView txtWifi;
-    private String hotSpotName;
     private ViewGroup transContainer;
 
     private CustomGauge zone1G1;
@@ -75,17 +74,15 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton togButton;
     private ToggleButton togStartStop;
 
+    private int currentZone = 4;
 
-    CircularBuffer zone1Wifi = new CircularBuffer(5);
-    CircularBuffer zone2Wifi = new CircularBuffer(5);
-    CircularBuffer zone3Wifi = new CircularBuffer(5);
+    CircularBuffer zone1Wifi = new CircularBuffer(6);
+    CircularBuffer zone2Wifi = new CircularBuffer(6);
+    CircularBuffer zone3Wifi = new CircularBuffer(6);
 
     String hotspotName;
     private Date timeEntered = Calendar.getInstance().getTime(); //time user entered a zone
     public static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-
-    private AsyncTask<Void, Void, String> dataThread;
-    private AsyncTask<Void, Void, String> wifiThread;
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -138,14 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
         transContainer.setVisibility(View.GONE);
 
-        Random rand = new Random();
-
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("locationData/");
-        HashMap<String, String> map = new HashMap<>();
-        map.put("ts",df.format(Calendar.getInstance().getTime()));
-        map.put("Location", "Zone 2");
-        map.put("HotSpotName", "Adam's iPhone");
-        myRef.push().setValue(map.toString());
 
         togStartStop = (ToggleButton) findViewById(R.id.togStartStop);
         togButton = (ToggleButton) findViewById(R.id.togButton);
@@ -155,13 +145,11 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) {
                     transContainer.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(transContainer);
-                    txtWifi.setVisibility(View.VISIBLE);
                     txtHotspotName.setVisibility(View.VISIBLE);
                     txtEnterName.setVisibility(View.VISIBLE);
                     togStartStop.setVisibility(View.VISIBLE);
                 } else {
                     TransitionManager.beginDelayedTransition(transContainer);
-                    txtWifi.setVisibility(View.GONE);
                     txtHotspotName.setVisibility(View.GONE);
                     txtEnterName.setVisibility(View.GONE);
                     togStartStop.setVisibility(View.GONE);
@@ -185,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                         txtHotspotName.setVisibility(View.GONE);
                         TransitionManager.beginDelayedTransition(transContainer);
                         txtEnterName.setVisibility(View.GONE);
+                        txtWifi.setVisibility(View.VISIBLE);
                     }
                     else {
                         togStartStop.setChecked(false);
@@ -198,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     TransitionManager.beginDelayedTransition(transContainer);
                     txtEnterName.setVisibility(View.VISIBLE);
                     TransitionManager.beginDelayedTransition(transContainer);
+                    txtWifi.setVisibility(View.GONE);
                 }
             }
 
@@ -262,6 +252,27 @@ public class MainActivity extends AppCompatActivity {
                                         break;
                                     }
                                 }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        int nearest = getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi);
+
+                                        if (nearest != currentZone){ //zone switch
+                                            currentZone = nearest;
+                                            txtWifi.setText("In Zone " + currentZone);
+                                            HashMap<String, String> map = new HashMap<>();
+                                            map.put("Name", hotspotName);
+                                            map.put("ts",df.format(Calendar.getInstance().getTime()));
+                                            if(currentZone == 4){
+                                                map.put("Location", "Unknown");
+                                            }
+                                            else {
+                                                map.put("Location", "Zone " + currentZone);
+                                            }
+                                            myRef.push().setValue(map);
+                                        }
+                                    }
+                                });
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -271,9 +282,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.e("MyAPP", "Event error: ", e);
                         }
                     });
-
-
-
 
                     return "Subscribed to Wifi locations";
                 } catch (IOException e) {
@@ -295,42 +303,6 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
 
         new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                switch (getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi)) {
-                                    case 1:
-                                        txtWifi.setText("In Zone 1");
-                                        break;
-                                    case 2:
-                                        txtWifi.setText("In Zone 2");
-                                        break;
-                                    case 3:
-                                        txtWifi.setText("In Zone 3");
-                                        break;
-                                    default:
-                                        txtWifi.setText("Unable to Locate");
-                                }
-                            }
-                        });
-                    }
-                }, 2000);
-                return "Finished";
-            }
-
-            // This code is run after the doInBackground code finishes
-            protected void onPostExecute(String msg) {
-                //wait for previous toast to finish
-            }
-        };
-
-        dataThread = new AsyncTask<Void, Void, String>() {
             protected String doInBackground(Void... params) {
                 try {
                     // Subscribe to zone 1 event
