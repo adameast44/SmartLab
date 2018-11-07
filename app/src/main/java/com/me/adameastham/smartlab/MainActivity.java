@@ -30,12 +30,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
 import io.particle.android.sdk.cloud.ParticleEvent;
 import io.particle.android.sdk.cloud.ParticleEventHandler;
-import io.particle.android.sdk.cloud.ParticleEventVisibility;
 import io.particle.android.sdk.cloud.exceptions.ParticleCloudException;
 import io.particle.android.sdk.utils.Toaster;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -44,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView txtWifi;
     private ViewGroup transContainer;
+    private ViewGroup zoneContainer;
 
     private CustomGauge zone1G1;
     private CustomGauge zone1G2;
@@ -52,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone1T1;
     private TextView zone1T2;
     private TextView zone1T3;
+    private TextView zone1View;
 
     private CustomGauge zone2G1;
     private CustomGauge zone2G2;
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone2T1;
     private TextView zone2T2;
     private TextView zone2T3;
+    private TextView zone2View;
 
     private CustomGauge zone3G1;
     private CustomGauge zone3G2;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone3T1;
     private TextView zone3T2;
     private TextView zone3T3;
+    private TextView zone3View;
 
     private TextView txtEnterName;
     private EditText txtHotspotName;
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         boolean isLoggedIn = false;
         txtWifi = findViewById(R.id.txtWifi);
         transContainer = findViewById(R.id.container);
+        zoneContainer = findViewById(R.id.zoneContainer);
         txtEnterName = findViewById(R.id.txtEnterName);
         txtHotspotName = findViewById(R.id.txtHotspotName);
 
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         zone1G1 = findViewById(R.id.zone1G1);
         zone1G2 = findViewById(R.id.zone1G2);
         zone1G3 = findViewById(R.id.zone1G3);
+        zone1View = findViewById(R.id.zone1View);
         zone1G1.setEndValue(100);
         zone1G2.setEndValue(100);
         zone1G3.setEndValue(100);
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         zone2G1 = findViewById(R.id.zone2G1);
         zone2G2 = findViewById(R.id.zone2G2);
         zone2G3 = findViewById(R.id.zone2G3);
+        zone2View = findViewById(R.id.zone2View);
         zone2G1.setEndValue(100);
         zone2G2.setEndValue(100);
         zone2G3.setEndValue(100);
@@ -128,12 +133,14 @@ public class MainActivity extends AppCompatActivity {
         zone3G1 = findViewById(R.id.zone3G1);
         zone3G2 = findViewById(R.id.zone3G2);
         zone3G3 = findViewById(R.id.zone3G3);
+        zone3View = findViewById(R.id.zone3View);
         zone3G1.setEndValue(100);
         zone3G2.setEndValue(100);
         zone3G3.setEndValue(100);
 
 
         transContainer.setVisibility(View.GONE);
+        zoneContainer.setVisibility(View.GONE);
 
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("locationData/");
 
@@ -154,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
                     txtEnterName.setVisibility(View.GONE);
                     togStartStop.setVisibility(View.GONE);
                     transContainer.setVisibility(View.VISIBLE);
-
                 }
             }
 
@@ -164,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         togStartStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (isChecked) { //tracking
                     if (!txtHotspotName.getText().toString().equals("")) {
                         hotspotName = txtHotspotName.getText().toString();
                         TransitionManager.beginDelayedTransition(transContainer);
@@ -174,12 +180,13 @@ public class MainActivity extends AppCompatActivity {
                         TransitionManager.beginDelayedTransition(transContainer);
                         txtEnterName.setVisibility(View.GONE);
                         txtWifi.setVisibility(View.VISIBLE);
+                        zoneContainer.setVisibility(View.VISIBLE);
                     }
-                    else {
+                    else { //not tracking
                         togStartStop.setChecked(false);
                         Toaster.s(MainActivity.this, "Please Enter a Hotspot Name");
                     }
-                } else {
+                } else { //not tracking
                     TransitionManager.beginDelayedTransition(transContainer);
                     togButton.setVisibility(View.VISIBLE);
                     TransitionManager.beginDelayedTransition(transContainer);
@@ -188,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
                     txtEnterName.setVisibility(View.VISIBLE);
                     TransitionManager.beginDelayedTransition(transContainer);
                     txtWifi.setVisibility(View.GONE);
+                    zoneContainer.setVisibility(View.GONE);
+                    zone1Wifi.empty();
+                    zone2Wifi.empty();
+                    zone3Wifi.empty();
                 }
             }
 
@@ -259,17 +270,39 @@ public class MainActivity extends AppCompatActivity {
 
                                         if (nearest != currentZone && togStartStop.isChecked()){ //zone switch
                                             currentZone = nearest;
-                                            txtWifi.setText("In Zone " + currentZone);
-                                            HashMap<String, String> map = new HashMap<>();
-                                            map.put("Name", hotspotName);
-                                            map.put("ts",df.format(Calendar.getInstance().getTime()));
-                                            if(currentZone == 4){
-                                                map.put("Location", "Unknown");
-                                            }
-                                            else {
+                                            if (currentZone!=4) {
+                                                txtWifi.setText("In Zone " + currentZone);
+                                                HashMap<String, String> map = new HashMap<>();
+                                                map.put("Name", hotspotName);
+                                                map.put("ts", df.format(Calendar.getInstance().getTime()));
                                                 map.put("Location", "Zone " + currentZone);
+                                                myRef.push().setValue(map);
                                             }
-                                            myRef.push().setValue(map);
+                                            else{
+                                                txtWifi.setText("Unkown Location");
+                                            }
+                                            switch(currentZone){
+                                                case 1:
+                                                    zone1View.setBackgroundResource(R.color.md_green_500);
+                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+                                                    break;
+                                                case 2:
+                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone2View.setBackgroundResource(R.color.md_green_500);
+                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+                                                    break;
+                                                case 3:
+                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone3View.setBackgroundResource(R.color.md_green_500);
+                                                    break;
+                                                default:
+                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+                                                    break;
+                                            }
                                         }
                                     }
                                 });
