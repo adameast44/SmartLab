@@ -3,6 +3,8 @@ package com.me.adameastham.smartlab;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 
+//Written by Adam Eastham
+
 public class CircularBuffer {
 
 

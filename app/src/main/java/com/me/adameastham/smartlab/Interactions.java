@@ -1,45 +1,39 @@
 package com.me.adameastham.smartlab;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.JsonReader;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import org.json.JSONObject;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
-import io.particle.android.sdk.cloud.ParticleEvent;
-import io.particle.android.sdk.cloud.ParticleEventHandler;
-import io.particle.android.sdk.cloud.exceptions.ParticleCloudException;
-import io.particle.android.sdk.utils.Toaster;
+
+//Written by Adam Eastham
 
 public class Interactions extends AppCompatActivity {
 
     ListView listView;
+    ArrayList<InteractionDataModel> dataModel;
+    private static customAdapterInteractions customAdapter;
 
-    //DEFINING A STRING ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
-    ArrayAdapter<String> adapter;
+    //declare variable for method
+    private String Time;
+    private String type;
+    private String zone;
+    private String date;
+    private String hms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interactions);
-
-        ParticleCloudSDK.init(this);
 
         listView = findViewById(R.id.LVInteractions);
 
@@ -52,27 +46,38 @@ public class Interactions extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
-                String[] tempList = new String[(int)dataSnapshot.getChildrenCount()];
                 int count = 0;
+                dataModel = new ArrayList<>();
+
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
-                    tempList[count] = " ";
                     //Build string
                     for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
-                        tempList[count] = insideSnapshot.getValue().toString() + "     " + tempList[count];
+                        if (insideSnapshot.getKey().toString().equals("ts")) {
+                            Time = insideSnapshot.getValue().toString();
+                            String s[] = Time.split("T");
+                            date = s[0];
+                            hms = s[1];
+                            hms = hms.substring(0, hms.length() - 1);
+                        }
+                        else if(insideSnapshot.getKey().toString().equals("Motion")){
+                            type = insideSnapshot.getValue().toString();
+                        }
+                        else if(insideSnapshot.getKey().toString().equals("Sound")){
+                            type = insideSnapshot.getValue().toString();
+                        }
+                        else if(insideSnapshot.getKey().toString().equals("Zone")) {
+                            zone = insideSnapshot.getValue().toString();
+                        }
                     }
+                    dataModel.add(new InteractionDataModel(date,hms,type,zone));
+
                     count++;
                 }
 
-                //remove empty elements and invert order.
-                String[] listItems = new String[count];
-                for (int i=0; i<count; i++){
-                    listItems[i] = tempList[count-i-1];
-                }
-
                 //insert data into list view
-                adapter=new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_layout, R.id.list_content, listItems);
-                listView.setAdapter(adapter);
+                customAdapter = new customAdapterInteractions(dataModel, getApplicationContext());
+                listView.setAdapter(customAdapter);
             }
 
             @Override

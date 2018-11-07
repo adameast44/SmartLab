@@ -1,5 +1,8 @@
 package com.me.adameastham.smartlab;
 
+//Written by Adam Eastham
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -12,16 +15,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
-import io.particle.android.sdk.cloud.ParticleDevice;
 import io.particle.android.sdk.cloud.ParticleEvent;
 import io.particle.android.sdk.cloud.ParticleEventHandler;
 import io.particle.android.sdk.cloud.exceptions.ParticleCloudException;
@@ -58,17 +68,24 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone3T2;
     private TextView zone3T3;
 
+    private TextView txtEnterName;
+    private EditText txtHotspotName;
     private ToggleButton togButton;
+    private ToggleButton togStartStop;
 
-    CircularBuffer zone1Wifi = new CircularBuffer(3);
-    CircularBuffer zone2Wifi = new CircularBuffer(3);
-    CircularBuffer zone3Wifi = new CircularBuffer(3);
 
-    String hotspotName = "Adam's iPhone";
+    CircularBuffer zone1Wifi = new CircularBuffer(5);
+    CircularBuffer zone2Wifi = new CircularBuffer(5);
+    CircularBuffer zone3Wifi = new CircularBuffer(5);
+
+    String hotspotName;
+    private Date timeEntered = Calendar.getInstance().getTime(); //time user entered a zone
+    public static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yySHH:mm:ss");
 
     private AsyncTask<Void, Void, String> dataThread;
     private AsyncTask<Void, Void, String> wifiThread;
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         boolean isLoggedIn = false;
         txtWifi = findViewById(R.id.txtWifi);
         transContainer = findViewById(R.id.container);
+        txtEnterName = findViewById(R.id.txtEnterName);
+        txtHotspotName = findViewById(R.id.txtHotspotName);
 
         //Zone 1 UI elements
         txtZ1out = findViewById(R.id.txtZ1Out);
@@ -114,9 +133,17 @@ public class MainActivity extends AppCompatActivity {
         zone3G2.setEndValue(100);
         zone3G3.setEndValue(100);
 
-        TransitionManager.beginDelayedTransition(transContainer);
+
         transContainer.setVisibility(View.GONE);
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Locations");
+        JsonObject json = new JsonObject();
+        json.add("ts",df.format(Calendar.getInstance().getTime()));
+        myRef.setValue();
+
+
+        togStartStop = (ToggleButton) findViewById(R.id.togStartStop);
         togButton = (ToggleButton) findViewById(R.id.togButton);
         togButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -125,288 +152,53 @@ public class MainActivity extends AppCompatActivity {
                     TransitionManager.beginDelayedTransition(transContainer);
                     transContainer.setVisibility(View.GONE);
                     txtWifi.setVisibility(View.VISIBLE);
-                    dataThread.cancel(true);
-                    wifiThread = new AsyncTask<Void, Void, String>() {
-
-                                @Override
-                                protected String doInBackground(Void... voids) {
-                                    try {
-                                        // Subscribe to zone 1 event
-                                        long event1 = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("wifiZone1", new ParticleEventHandler() {
-
-                                            // Trigger this function when the event is received
-                                            public void onEvent(String eventName, ParticleEvent wifiEvent1) {
-
-                                                JSONObject data = null;
-                                                try {
-                                                    int count = 0;
-                                                    boolean found = false;
-                                                    //parse data to JSON
-                                                    data = new JSONObject(wifiEvent1.dataPayload.toString());
-                                                    while (!found) {
-                                                        try {
-                                                            if (data.getJSONObject(Integer.toString(count)).getString("ssid").equals(hotspotName)) {
-                                                                found = true;
-                                                                zone1Wifi.add(data.getJSONObject(Integer.toString(count)).getInt("rssi"));
-                                                            }
-                                                            count++;
-                                                        } catch (JSONException e) {
-                                                            break;
-                                                        }
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                            public void onEventError(Exception e) {
-                                                Log.e("MyAPP", "Event error: ", e);
-                                            }
-                                        });
-
-                                        // Subscribe to zone 2 event
-                                        long event2 = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("wifiZone2", new ParticleEventHandler() {
-
-                                            // Trigger this function when the event is received
-                                            public void onEvent(String eventName, ParticleEvent wifiEvent2) {
-
-                                                JSONObject data = null;
-                                                try {
-                                                    int count = 0;
-                                                    boolean found = false;
-                                                    //parse data to JSON
-                                                    data = new JSONObject(wifiEvent2.dataPayload.toString());
-                                                    while (!found) {
-                                                        try {
-                                                            if (data.getJSONObject(Integer.toString(count)).getString("ssid").equals(hotspotName)) {
-                                                                found = true;
-                                                                zone2Wifi.add(data.getJSONObject(Integer.toString(count)).getInt("rssi"));
-                                                            }
-                                                            count++;
-                                                        } catch (JSONException e) {
-                                                            break;
-                                                        }
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                            public void onEventError(Exception e) {
-                                                Log.e("MyAPP", "Event error: ", e);
-                                            }
-                                        });
-
-                                        // Subscribe to zone 3 event
-                                        long event3 = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("wifiZone3", new ParticleEventHandler() {
-
-                                            // Trigger this function when the event is received
-                                            public void onEvent(String eventName, ParticleEvent wifiEvent3) {
-
-                                                JSONObject data = null;
-                                                try {
-                                                    int count = 0;
-                                                    boolean found = false;
-                                                    //parse data to JSON
-                                                    data = new JSONObject(wifiEvent3.dataPayload.toString());
-                                                    while (!found) {
-                                                        try {
-                                                            if (data.getJSONObject(Integer.toString(count)).getString("ssid").equals(hotspotName)) {
-                                                                found = true;
-                                                                zone3Wifi.add(data.getJSONObject(Integer.toString(count)).getInt("rssi"));
-
-                                                                runOnUiThread(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        switch (getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi)) {
-                                                                            case 1:
-                                                                                txtWifi.setText("In zone 1");
-                                                                                break;
-                                                                            case 2:
-                                                                                txtWifi.setText("In Zone 2");
-                                                                                break;
-                                                                            case 3:
-                                                                                txtWifi.setText("In Zone 3");
-                                                                                break;
-                                                                            default:
-                                                                                txtWifi.setText("Unable to locate!");
-                                                                        }
-                                                                    }
-                                                                });
-                                                            }
-                                                            count++;
-                                                        } catch (JSONException e) {
-                                                            break;
-                                                        }
-                                                    }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-
-                                            public void onEventError(Exception e) {
-                                                Log.e("MyAPP", "Event error: ", e);
-                                            }
-                                        });
-
-                                        return "Subscribed to Wifi locations";
-                                    } catch (IOException e) {
-                                        //error subscribing
-                                        Log.e("MyAPP", e.toString());
-                                        return "Error subscribing!";
-                                    }
-                                }
-                                // This code is run after the doInBackground code finishes
-                                protected void onPostExecute (String msg){
-                                    //wait for previous toast to finish
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toaster.s(MainActivity.this, msg);
-                                        }
-                                    }, 2000);
-                                }
-                            }.execute();
+                    txtHotspotName.setVisibility(View.VISIBLE);
+                    txtEnterName.setVisibility(View.VISIBLE);
+                    togStartStop.setVisibility(View.VISIBLE);
                 } else {
                     TransitionManager.beginDelayedTransition(transContainer);
-                    wifiThread.cancel(true);
-                    dataThread = new AsyncTask<Void, Void, String>() {
-                        protected String doInBackground(Void... params) {
-                            try {
-                                // Subscribe to zone 1 event
-                                long zone1Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone1",
-                                        new ParticleEventHandler() {
-
-                                            // Trigger this function when the event is received
-                                            public void onEvent(String eventName, ParticleEvent event1) {
-
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        JSONObject data = null;
-                                                        try {
-                                                            //parse data to JSON
-                                                            data = new JSONObject(event1.dataPayload.toString());
-                                                            //output to gauges
-                                                            zone1G1.setValue((int) data.getDouble("temp"));
-                                                            zone1G2.setValue((int) data.getDouble("hum"));
-                                                            zone1G3.setValue((int) data.getDouble("ambL"));
-                                                            //output string
-                                                            txtZ1out.setText("Connected");
-                                                            zone1T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                                            zone1T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                                            zone1T3.setText(String.format("%.2f", data.getDouble("ambL")));
-
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                });
-                                            }
-
-                                            public void onEventError(Exception e) {
-                                                Log.e("MyAPP", "Event error: ", e);
-                                            }
-                                        });
-                                // Subscribe to zone 2 event
-                                long zone2Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone2", new ParticleEventHandler() {
-
-                                    // Trigger this function when the event is received
-                                    public void onEvent(String eventName, ParticleEvent event2) {
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                JSONObject data = null;
-                                                try {
-                                                    //parse data to JSON
-                                                    data = new JSONObject(event2.dataPayload.toString());
-                                                    //output to gauges
-                                                    zone2G1.setValue((int) data.getDouble("temp"));
-                                                    zone2G2.setValue((int) data.getDouble("hum"));
-                                                    zone2G3.setValue((int) data.getDouble("ambL"));
-                                                    //output string
-                                                    txtZ2out.setText("Connected");
-                                                    zone2T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                                    zone2T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                                    zone2T3.setText(String.format("%.2f", data.getDouble("ambL")));
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    public void onEventError(Exception e) {
-                                        Log.e("MyAPP", "Event error: ", e);
-                                    }
-                                });
-                                // Subscribe to zone 3 event
-                                long zone3Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone3", new ParticleEventHandler() {
-
-                                    // Trigger this function when the event is received
-                                    public void onEvent(String eventName, ParticleEvent event3) {
-
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                JSONObject data = null;
-                                                try {
-                                                    //parse data to JSON
-                                                    data = new JSONObject(event3.dataPayload.toString());
-                                                    //output to gauges
-                                                    zone3G1.setValue((int) data.getDouble("temp"));
-                                                    zone3G2.setValue((int) data.getDouble("hum"));
-                                                    zone3G3.setValue((int) data.getDouble("ambL"));
-                                                    //output string
-                                                    txtZ3out.setText("Connected");
-                                                    zone3T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                                    zone3T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                                    zone3T3.setText(String.format("%.2f", data.getDouble("ambL")));
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    public void onEventError(Exception e) {
-                                        Log.e("MyAPP", "Event error: ", e);
-                                    }
-                                });
-
-                                return "Subscribed to data!";
-                            } catch (IOException e) {
-                                //error subscribing
-                                Log.e("MyAPP", e.toString());
-                                return "Error subscribing!";
-                            }
-                        }
-
-                        // This code is run after the doInBackground code finishes
-                        protected void onPostExecute(String msg) {
-                            //wait for previous toast to finish
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toaster.s(MainActivity.this, msg);
-                                }
-                            }, 2000);
-                        }
-                    }.execute();
-                    transContainer.setVisibility(View.VISIBLE);
                     txtWifi.setVisibility(View.GONE);
+                    txtHotspotName.setVisibility(View.GONE);
+                    txtEnterName.setVisibility(View.GONE);
+                    togStartStop.setVisibility(View.GONE);
+                    transContainer.setVisibility(View.VISIBLE);
 
                 }
             }
+
         });
-        togButton.setChecked(false);
+        togButton.setChecked(true);
+
+        togStartStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (!txtHotspotName.getText().toString().equals("")) {
+                        hotspotName = txtHotspotName.getText().toString();
+                        TransitionManager.beginDelayedTransition(transContainer);
+                        togButton.setVisibility(View.GONE);
+                        txtHotspotName.setVisibility(View.GONE);
+                        txtEnterName.setVisibility(View.GONE);
+                    }
+                    else {
+                        togStartStop.setChecked(false);
+                        Toaster.s(MainActivity.this, "Please Enter a Hotspot Name");
+                    }
+                } else {
+                    TransitionManager.beginDelayedTransition(transContainer);
+                    togButton.setVisibility(View.VISIBLE);
+                    txtHotspotName.setVisibility(View.VISIBLE);
+                    txtEnterName.setVisibility(View.VISIBLE);
+                }
+            }
+
+        });
+        togStartStop.setChecked(false);
 
         ParticleCloudSDK.init(this);
         //Login to Particle
          new AsyncTask<Void, Void, String>() {
             protected String doInBackground(Void... params) {
-                //aede0f53c224078decdd86191bf1e468ab6e9cd1
                 //  LOG IN TO PARTICLE
                 try {
                     // Log in to Particle Cloud using username and password
@@ -513,25 +305,26 @@ public class MainActivity extends AppCompatActivity {
                                         if (data.getJSONObject(Integer.toString(count)).getString("ssid").equals(hotspotName)) {
                                             found = true;
                                             zone3Wifi.add(data.getJSONObject(Integer.toString(count)).getInt("rssi"));
-
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    switch (getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi)) {
-                                                        case 1:
-                                                            txtWifi.setText("In zone 1");
-                                                            break;
-                                                        case 2:
-                                                            txtWifi.setText("In Zone 2");
-                                                            break;
-                                                        case 3:
-                                                            txtWifi.setText("In Zone 3");
-                                                            break;
-                                                        default:
-                                                            txtWifi.setText("Unable to locate!");
+                                            if(togStartStop.isChecked()) {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        switch (getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi)) {
+                                                            case 1:
+                                                                txtWifi.setText("In zone 1");
+                                                                break;
+                                                            case 2:
+                                                                txtWifi.setText("In Zone 2");
+                                                                break;
+                                                            case 3:
+                                                                txtWifi.setText("In Zone 3");
+                                                                break;
+                                                            default:
+                                                                txtWifi.setText("Unable to locate!");
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                         count++;
                                     } catch (JSONException e) {
@@ -557,6 +350,130 @@ public class MainActivity extends AppCompatActivity {
             }
             // This code is run after the doInBackground code finishes
             protected void onPostExecute (String msg){
+                //wait for previous toast to finish
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toaster.s(MainActivity.this, msg);
+                    }
+                }, 2000);
+            }
+        }.execute();
+        dataThread = new AsyncTask<Void, Void, String>() {
+            protected String doInBackground(Void... params) {
+                try {
+                    // Subscribe to zone 1 event
+                    long zone1Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone1",
+                            new ParticleEventHandler() {
+
+                                // Trigger this function when the event is received
+                                public void onEvent(String eventName, ParticleEvent event1) {
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            JSONObject data = null;
+                                            try {
+                                                //parse data to JSON
+                                                data = new JSONObject(event1.dataPayload.toString());
+                                                //output to gauges
+                                                zone1G1.setValue((int) data.getDouble("temp"));
+                                                zone1G2.setValue((int) data.getDouble("hum"));
+                                                zone1G3.setValue((int) data.getDouble("ambL"));
+                                                //output string
+                                                txtZ1out.setText("Connected");
+                                                zone1T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
+                                                zone1T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
+                                                zone1T3.setText(String.format("%.2f", data.getDouble("ambL")));
+
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                public void onEventError(Exception e) {
+                                    Log.e("MyAPP", "Event error: ", e);
+                                }
+                            });
+                    // Subscribe to zone 2 event
+                    long zone2Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone2", new ParticleEventHandler() {
+
+                        // Trigger this function when the event is received
+                        public void onEvent(String eventName, ParticleEvent event2) {
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JSONObject data = null;
+                                    try {
+                                        //parse data to JSON
+                                        data = new JSONObject(event2.dataPayload.toString());
+                                        //output to gauges
+                                        zone2G1.setValue((int) data.getDouble("temp"));
+                                        zone2G2.setValue((int) data.getDouble("hum"));
+                                        zone2G3.setValue((int) data.getDouble("ambL"));
+                                        //output string
+                                        txtZ2out.setText("Connected");
+                                        zone2T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
+                                        zone2T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
+                                        zone2T3.setText(String.format("%.2f", data.getDouble("ambL")));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+
+                        public void onEventError(Exception e) {
+                            Log.e("MyAPP", "Event error: ", e);
+                        }
+                    });
+                    // Subscribe to zone 3 event
+                    long zone3Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone3", new ParticleEventHandler() {
+
+                        // Trigger this function when the event is received
+                        public void onEvent(String eventName, ParticleEvent event3) {
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    JSONObject data = null;
+                                    try {
+                                        //parse data to JSON
+                                        data = new JSONObject(event3.dataPayload.toString());
+                                        //output to gauges
+                                        zone3G1.setValue((int) data.getDouble("temp"));
+                                        zone3G2.setValue((int) data.getDouble("hum"));
+                                        zone3G3.setValue((int) data.getDouble("ambL"));
+                                        //output string
+                                        txtZ3out.setText("Connected");
+                                        zone3T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
+                                        zone3T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
+                                        zone3T3.setText(String.format("%.2f", data.getDouble("ambL")));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+
+                        public void onEventError(Exception e) {
+                            Log.e("MyAPP", "Event error: ", e);
+                        }
+                    });
+
+                    return "Subscribed to data!";
+                } catch (IOException e) {
+                    //error subscribing
+                    Log.e("MyAPP", e.toString());
+                    return "Error subscribing!";
+                }
+            }
+
+            // This code is run after the doInBackground code finishes
+            protected void onPostExecute(String msg) {
                 //wait for previous toast to finish
                 new Handler().postDelayed(new Runnable() {
                     @Override

@@ -18,7 +18,7 @@
 
 
     <TextView
-        android:id="@+id/temp"
+        android:id="@+id/type"
         android:textColor="#000000"
         android:gravity="center"
         android:textSize="24sp"
@@ -29,18 +29,7 @@
         />
 
     <TextView
-        android:id="@+id/light"
-        android:textColor="#000000"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:layout_margin="4dip"
-        android:layout_weight="1"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <TextView
-        android:id="@+id/humidity"
+        android:id="@+id/zone"
         android:textColor="#000000"
         android:gravity="center"
         android:textSize="24sp"
