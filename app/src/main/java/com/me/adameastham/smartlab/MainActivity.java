@@ -257,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void run() {
                                         int nearest = getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi);
 
-                                        if (nearest != currentZone){ //zone switch
+                                        if (nearest != currentZone && togStartStop.isChecked()){ //zone switch
                                             currentZone = nearest;
                                             txtWifi.setText("In Zone " + currentZone);
                                             HashMap<String, String> map = new HashMap<>();
