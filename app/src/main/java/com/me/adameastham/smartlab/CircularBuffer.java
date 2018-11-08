@@ -23,7 +23,7 @@ public class CircularBuffer {
         head = 0;
     }
 
-    //add a beacon to buffer
+    //add a an element to buffer
     public void add(int toAdd) {
         if (head != (tail - 1)) {
             buffer[head++] = toAdd;
@@ -33,7 +33,7 @@ public class CircularBuffer {
         head = head % buffer.length;
     }
 
-    //remove a beacon from the front of the buffer
+    //remove a element from the front of the buffer
     public int get() {
         int t;
         int adjTail = tail > head ? tail - buffer.length : tail;
@@ -51,7 +51,7 @@ public class CircularBuffer {
         buffer = new int[size];
     }
 
-    //return a beacon form a specified position in the buffer
+    //return a element form a specified position in the buffer
     public int peak(int x){
         return buffer[x];
     }

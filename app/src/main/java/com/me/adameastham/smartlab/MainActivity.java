@@ -3,6 +3,7 @@ package com.me.adameastham.smartlab;
 //Written by Adam Eastham
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -14,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -161,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
                     txtEnterName.setVisibility(View.GONE);
                     togStartStop.setVisibility(View.GONE);
                     transContainer.setVisibility(View.VISIBLE);
+                    //hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
             }
 
@@ -181,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                         txtEnterName.setVisibility(View.GONE);
                         txtWifi.setVisibility(View.VISIBLE);
                         zoneContainer.setVisibility(View.VISIBLE);
+                        //hide keyboard
+                        InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                     }
                     else { //not tracking
                         togStartStop.setChecked(false);
