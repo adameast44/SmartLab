@@ -57,7 +57,6 @@ public class Location extends AppCompatActivity {
                             String s[] = Time.split(" - ");
                             date = s[0];
                             hms = s[1];
-                            hms = hms.substring(0, hms.length() - 1);
                         }
                         else if(insideSnapshot.getKey().toString().equals("Name")){
                             type = insideSnapshot.getValue().toString();
