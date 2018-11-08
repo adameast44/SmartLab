@@ -51,7 +51,7 @@ public class CircularBuffer {
         buffer = new int[size];
     }
 
-    //return a element form a specified position in the buffer
+    //return a element from a specified position in the buffer
     public int peak(int x){
         return buffer[x];
     }

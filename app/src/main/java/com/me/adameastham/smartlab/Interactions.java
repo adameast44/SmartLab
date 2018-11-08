@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
 
@@ -74,6 +75,9 @@ public class Interactions extends AppCompatActivity {
 
                     count++;
                 }
+
+                //flip order of list
+                Collections.reverse(dataModel);
 
                 //insert data into list view
                 customAdapter = new customAdapterInteractions(dataModel, getApplicationContext());

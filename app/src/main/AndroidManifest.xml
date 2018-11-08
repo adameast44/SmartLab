@@ -23,7 +23,7 @@
         <activity
             android:name=".Location"
             android:screenOrientation="portrait"
-            android:label="Interactions"></activity>
+            android:label="Location History"></activity>
         <activity
             android:name=".Zone1"
             android:screenOrientation="portrait"

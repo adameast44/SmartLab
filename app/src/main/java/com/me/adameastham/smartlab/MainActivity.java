@@ -141,32 +141,38 @@ public class MainActivity extends AppCompatActivity {
         zone3G2.setEndValue(100);
         zone3G3.setEndValue(100);
 
-
+        //arange UI
         transContainer.setVisibility(View.GONE);
-        zoneContainer.setVisibility(View.GONE);
+        zone1View.setVisibility(View.GONE);
+        zone2View.setVisibility(View.GONE);
+        zone3View.setVisibility(View.GONE);
 
+        //connect to firebase
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("locationData/");
 
         togStartStop = (ToggleButton) findViewById(R.id.togStartStop);
         togButton = (ToggleButton) findViewById(R.id.togButton);
+
         togButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    //Change UI view
                     transContainer.setVisibility(View.GONE);
                     TransitionManager.beginDelayedTransition(transContainer);
                     txtHotspotName.setVisibility(View.VISIBLE);
                     txtEnterName.setVisibility(View.VISIBLE);
                     togStartStop.setVisibility(View.VISIBLE);
+                    //hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 } else {
+                    //Change UI view
                     TransitionManager.beginDelayedTransition(transContainer);
                     txtHotspotName.setVisibility(View.GONE);
                     txtEnterName.setVisibility(View.GONE);
                     togStartStop.setVisibility(View.GONE);
                     transContainer.setVisibility(View.VISIBLE);
-                    //hide keyboard
-                    InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
-                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
             }
 
@@ -179,14 +185,16 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) { //tracking
                     if (!txtHotspotName.getText().toString().equals("")) {
                         hotspotName = txtHotspotName.getText().toString();
-                        TransitionManager.beginDelayedTransition(transContainer);
+                        //Change UI view
+                        TransitionManager.beginDelayedTransition(zoneContainer);
                         togButton.setVisibility(View.GONE);
-                        TransitionManager.beginDelayedTransition(transContainer);
                         txtHotspotName.setVisibility(View.GONE);
-                        TransitionManager.beginDelayedTransition(transContainer);
                         txtEnterName.setVisibility(View.GONE);
                         txtWifi.setVisibility(View.VISIBLE);
-                        zoneContainer.setVisibility(View.VISIBLE);
+                        txtWifi.setText("Locating...");
+                        zone1View.setVisibility(View.VISIBLE);
+                        zone2View.setVisibility(View.VISIBLE);
+                        zone3View.setVisibility(View.VISIBLE);
                         //hide keyboard
                         InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
@@ -196,15 +204,16 @@ public class MainActivity extends AppCompatActivity {
                         Toaster.s(MainActivity.this, "Please Enter a Hotspot Name");
                     }
                 } else { //not tracking
-                    TransitionManager.beginDelayedTransition(transContainer);
+                    //Change UI view
+                    TransitionManager.beginDelayedTransition(zoneContainer);
                     togButton.setVisibility(View.VISIBLE);
-                    TransitionManager.beginDelayedTransition(transContainer);
                     txtHotspotName.setVisibility(View.VISIBLE);
-                    TransitionManager.beginDelayedTransition(transContainer);
                     txtEnterName.setVisibility(View.VISIBLE);
-                    TransitionManager.beginDelayedTransition(transContainer);
                     txtWifi.setVisibility(View.GONE);
-                    zoneContainer.setVisibility(View.GONE);
+                    zone1View.setVisibility(View.GONE);
+                    zone2View.setVisibility(View.GONE);
+                    zone3View.setVisibility(View.GONE);
+                    //empty buffers
                     zone1Wifi.empty();
                     zone2Wifi.empty();
                     zone3Wifi.empty();
@@ -216,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         ParticleCloudSDK.init(this);
         //Login to Particle
-         new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, String>() {
             protected String doInBackground(Void... params) {
                 //  LOG IN TO PARTICLE
                 try {
@@ -277,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void run() {
                                         int nearest = getNearestZone(zone1Wifi, zone2Wifi, zone3Wifi);
 
-                                        if (nearest != currentZone && togStartStop.isChecked()){ //zone switch
+                                        if (nearest != currentZone && togStartStop.isChecked() && zone1Wifi.peak(zone1Wifi.size()-1)!=0){ //zone switch
                                             currentZone = nearest;
                                             if (currentZone!=4) {
                                                 txtWifi.setText("In Zone " + currentZone);
@@ -344,6 +353,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute();
 
+        //subscribe to live data
         new AsyncTask<Void, Void, String>() {
             protected String doInBackground(Void... params) {
                 try {

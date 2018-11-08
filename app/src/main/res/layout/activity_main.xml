@@ -592,45 +592,6 @@
         </LinearLayout>
     </ScrollView>
     </LinearLayout>
-    <TextView
-        android:id="@+id/txtEnterName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:text="Enter your hotspot name:"
-        android:textSize="25sp"
-        android:textColor="@color/colorPrimaryDark"
-        android:textAlignment="center"/>
-
-    <EditText
-        android:id="@+id/txtHotspotName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:inputType="textPersonName"/>
-
-    <ToggleButton
-        android:id="@+id/togStartStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:textColor="@color/colorPrimaryDark"
-        android:background="@color/md_blue_50"
-        android:textOn="Stop Locating"
-        android:textOff="Start Locating" />
-
-    <TextView
-        android:id="@+id/txtWifi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textColor="@color/colorPrimaryDark"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -638,60 +599,100 @@
         android:id="@+id/zoneContainer"
         android:orientation="vertical">
 
-    <ScrollView
-        android:id="@+id/zoneScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-
-        <LinearLayout
-            android:layout_width="fill_parent"
+        <TextView
+            android:id="@+id/txtEnterName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:paddingTop="5dp"
+            android:text="Enter your hotspot name:"
+            android:textSize="25sp"
+            android:textColor="@color/colorPrimaryDark"
+            android:textAlignment="center"/>
 
-            <TextView
-                android:id="@+id/zone1View"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:text="Zone 1"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"
-                android:background="@color/md_grey_300" />
+        <EditText
+            android:id="@+id/txtHotspotName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:inputType="textPersonName"/>
 
-            <TextView
-                android:id="@+id/zone2View"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:text="Zone 2"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"
-                android:background="@color/md_grey_300" />
+        <ToggleButton
+            android:id="@+id/togStartStop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:background="@color/md_blue_50"
+            android:textOn="Stop Locating"
+            android:textOff="Start Locating" />
 
-            <TextView
-                android:id="@+id/zone3View"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:text="Zone 3"
-                android:textAlignment="center"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"
-                android:background="@color/md_grey_300" />
-        </LinearLayout>
-    </ScrollView>
+        <TextView
+            android:id="@+id/txtWifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <ScrollView
+            android:id="@+id/zoneScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/zone1View"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Zone 1"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:background="@color/md_grey_300" />
+
+                <TextView
+                    android:id="@+id/zone2View"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Zone 2"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:background="@color/md_grey_300" />
+
+                <TextView
+                    android:id="@+id/zone3View"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:text="Zone 3"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="20sp"
+                    android:background="@color/md_grey_300" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>

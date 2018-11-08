@@ -12,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 //Written by Inkan Fung and Adam Eastham
 
@@ -91,6 +92,9 @@ public class Zone3 extends AppCompatActivity {
                         count++;
                     }
                 }
+
+                //flip order of list
+                Collections.reverse(zoneDataModels);
 
                 //insert data into list view
                 customAdapterZones = new customAdapterZones(zoneDataModels, getApplicationContext());
