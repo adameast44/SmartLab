@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                                                 myRef.push().setValue(map);
                                             }
                                             else{
-                                                txtWifi.setText("Unkown Location");
+                                                txtWifi.setText("Unknown Location");
                                             }
                                             switch(currentZone){
                                                 case 1:
