@@ -3,8 +3,11 @@ package com.me.adameastham.smartlab;
 //Written by Adam Eastham
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -13,20 +16,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
+import io.particle.android.sdk.cloud.ParticleEvent;
+import io.particle.android.sdk.cloud.ParticleEventHandler;
 import io.particle.android.sdk.cloud.exceptions.ParticleCloudException;
 import io.particle.android.sdk.utils.Toaster;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -69,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
     private ToggleButton togButton;
     private ToggleButton togStartStop;
 
+    private final int MOTION_TYPE = 0;
+    private final int SOUND_TYPE = 1;
+
     private int currentZone = 4;
 
     CircularBuffer zone1Wifi = new CircularBuffer(6);
@@ -79,11 +95,17 @@ public class MainActivity extends AppCompatActivity {
     private Date timeEntered = Calendar.getInstance().getTime(); //time user entered a zone
     public static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
 
+    ArrayList<InteractableObject> objects = new ArrayList<>();
+
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        objects.add(new InteractableObject("Bin",findViewById(R.id.intBin)));
+        objects.add(new InteractableObject("Fridge", findViewById(R.id.intFridge)));
+        objects.add(new InteractableObject("Door", findViewById(R.id.intDoor)));
 
         boolean isLoggedIn = false;
         txtWifi = findViewById(R.id.txtWifi);
@@ -93,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         txtHotspotName = findViewById(R.id.txtHotspotName);
 
         //Zone 1 UI elements
-        txtZ1out = findViewById(R.id.txtZ1Out);
         zone1T1 = findViewById(R.id.zone1T1);
         zone1T2 = findViewById(R.id.zone1T2);
         zone1T3 = findViewById(R.id.zone1T3);
@@ -106,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         zone1G3.setEndValue(100);
 
         //Zone 2 UI elements
-        txtZ2out = findViewById(R.id.txtZ2Out);
         zone2T1 = findViewById(R.id.zone2T1);
         zone2T2 = findViewById(R.id.zone2T2);
         zone2T3 = findViewById(R.id.zone2T3);
@@ -119,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
         zone2G3.setEndValue(100);
 
         //Zone 3 UI elements
-        txtZ3out = findViewById(R.id.txtZ3Out);
         zone3T1 = findViewById(R.id.zone3T1);
         zone3T2 = findViewById(R.id.zone3T2);
         zone3T3 = findViewById(R.id.zone3T3);
@@ -144,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
         togButton = (ToggleButton) findViewById(R.id.togButton);
 
         togButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     //Change UI view
@@ -153,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
                     txtHotspotName.setVisibility(View.VISIBLE);
                     txtEnterName.setVisibility(View.VISIBLE);
                     togStartStop.setVisibility(View.VISIBLE);
-                    //hide keyboard
                     InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
                     imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 } else {
                     //Change UI view
                     TransitionManager.beginDelayedTransition(transContainer);
@@ -163,11 +181,15 @@ public class MainActivity extends AppCompatActivity {
                     txtEnterName.setVisibility(View.GONE);
                     togStartStop.setVisibility(View.GONE);
                     transContainer.setVisibility(View.VISIBLE);
+                    //hide keyboard
+                    InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                 }
             }
 
         });
         togButton.setChecked(true);
+        togButton.setChecked(false);
 
         togStartStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -175,19 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) { //tracking
                     if (!txtHotspotName.getText().toString().equals("")) {
                         hotspotName = txtHotspotName.getText().toString();
-                        //Change UI view
-                        TransitionManager.beginDelayedTransition(zoneContainer);
-                        togButton.setVisibility(View.GONE);
-                        txtHotspotName.setVisibility(View.GONE);
-                        txtEnterName.setVisibility(View.GONE);
-                        txtWifi.setVisibility(View.VISIBLE);
-                        txtWifi.setText("Locating...");
-                        zone1View.setVisibility(View.VISIBLE);
-                        zone2View.setVisibility(View.VISIBLE);
-                        zone3View.setVisibility(View.VISIBLE);
-                        //hide keyboard
-                        InputMethodManager imm = (InputMethodManager) getSystemService(MainActivity.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+                        togButton.setChecked(false);
                     }
                     else { //not tracking
                         togStartStop.setChecked(false);
@@ -235,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute();
 
-        /*new AsyncTask<Void, Void, String>() {
+        new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
@@ -286,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                                                 myRef.push().setValue(map);
                                             }
                                             else{
-                                                txtWifi.setText("Unknown Location");
+                                                txtWifi.setText("Unkown Location");
                                             }
                                             switch(currentZone){
                                                 case 1:
@@ -347,11 +357,11 @@ public class MainActivity extends AppCompatActivity {
             protected String doInBackground(Void... params) {
                 try {
                     // Subscribe to zone 1 event
-                    long zone1Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone1",
+                    long zone1Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("zoneData",
                             new ParticleEventHandler() {
 
                                 // Trigger this function when the event is received
-                                public void onEvent(String eventName, ParticleEvent event1) {
+                                public void onEvent(String eventName, ParticleEvent zoneEvent) {
 
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -359,16 +369,44 @@ public class MainActivity extends AppCompatActivity {
                                             JSONObject data = null;
                                             try {
                                                 //parse data to JSON
-                                                data = new JSONObject(event1.dataPayload.toString());
-                                                //output to gauges
-                                                zone1G1.setValue((int) data.getDouble("temp"));
-                                                zone1G2.setValue((int) data.getDouble("hum"));
-                                                zone1G3.setValue((int) data.getDouble("ambL"));
-                                                //output string
-                                                txtZ1out.setText("Connected");
-                                                zone1T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                                zone1T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                                zone1T3.setText(String.format("%.2f", data.getDouble("ambL")));
+                                                data = new JSONObject(zoneEvent.dataPayload.toString());
+                                                String zoneName = data.getString("zone");
+                                                double temp = data.getDouble("temp");
+                                                double hum = data.getDouble("hum");
+                                                double ambL = data.getDouble("ambL");
+                                                switch (zoneName){
+                                                    case "Zone1":
+                                                        //output to gauges
+                                                        zone1G1.setValue((int) temp);
+                                                        zone1G2.setValue((int) hum);
+                                                        zone1G3.setValue((int) ambL);
+                                                        //output string
+                                                        zone1T1.setText(String.format("%.2f", temp) + "°C");
+                                                        zone1T2.setText(String.format("%.2f", hum) + "%");
+                                                        zone1T3.setText(String.format("%.2f", ambL) + "lx");
+                                                        break;
+                                                    case "Zone2":
+                                                        //output to gauges
+                                                        zone2G1.setValue((int) temp);
+                                                        zone2G2.setValue((int) hum);
+                                                        zone2G3.setValue((int) ambL);
+                                                        //output string
+                                                        zone2T1.setText(String.format("%.2f", temp) + "°C");
+                                                        zone2T2.setText(String.format("%.2f", hum) + "%");
+                                                        zone2T3.setText(String.format("%.2f", ambL) + "lx");
+                                                        break;
+                                                    case "Zone3":
+                                                        //output to gauges
+                                                        zone3G1.setValue((int) temp);
+                                                        zone3G2.setValue((int) hum);
+                                                        zone3G3.setValue((int) ambL);
+                                                        //output string
+                                                        zone3T1.setText(String.format("%.2f", temp) + "°C");
+                                                        zone3T2.setText(String.format("%.2f", hum) + "%");
+                                                        zone3T3.setText(String.format("%.2f", ambL) + "lx");
+                                                        break;
+                                                }
+
 
                                             } catch (JSONException e) {
                                                 e.printStackTrace();
@@ -381,73 +419,6 @@ public class MainActivity extends AppCompatActivity {
                                     Log.e("MyAPP", "Event error: ", e);
                                 }
                             });
-                    // Subscribe to zone 2 event
-                    long zone2Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone2", new ParticleEventHandler() {
-
-                        // Trigger this function when the event is received
-                        public void onEvent(String eventName, ParticleEvent event2) {
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    JSONObject data = null;
-                                    try {
-                                        //parse data to JSON
-                                        data = new JSONObject(event2.dataPayload.toString());
-                                        //output to gauges
-                                        zone2G1.setValue((int) data.getDouble("temp"));
-                                        zone2G2.setValue((int) data.getDouble("hum"));
-                                        zone2G3.setValue((int) data.getDouble("ambL"));
-                                        //output string
-                                        txtZ2out.setText("Connected");
-                                        zone2T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                        zone2T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                        zone2T3.setText(String.format("%.2f", data.getDouble("ambL")));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-
-                        public void onEventError(Exception e) {
-                            Log.e("MyAPP", "Event error: ", e);
-                        }
-                    });
-                    // Subscribe to zone 3 event
-                    long zone3Event = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("publishZone3", new ParticleEventHandler() {
-
-                        // Trigger this function when the event is received
-                        public void onEvent(String eventName, ParticleEvent event3) {
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    JSONObject data = null;
-                                    try {
-                                        //parse data to JSON
-                                        data = new JSONObject(event3.dataPayload.toString());
-                                        //output to gauges
-                                        zone3G1.setValue((int) data.getDouble("temp"));
-                                        zone3G2.setValue((int) data.getDouble("hum"));
-                                        zone3G3.setValue((int) data.getDouble("ambL"));
-                                        //output string
-                                        txtZ3out.setText("Connected");
-                                        zone3T1.setText(String.format("%.2f", data.getDouble("temp")) + "°C");
-                                        zone3T2.setText(String.format("%.2f", data.getDouble("hum")) + "%");
-                                        zone3T3.setText(String.format("%.2f", data.getDouble("ambL")));
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-
-                        public void onEventError(Exception e) {
-                            Log.e("MyAPP", "Event error: ", e);
-                        }
-                    });
-
                     return "Subscribed to data!";
                 } catch (IOException e) {
                     //error subscribing
@@ -466,9 +437,105 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 2000);
             }
-        }.execute();*/
+        }.execute();
 
+        //sound and motion
+        new AsyncTask<Void, Void, String>() {
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    // Subscribe to zone 1 event
+                    long event1 = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("detectionData", new ParticleEventHandler() {
+
+                        // Trigger this function when the event is received
+                        public void onEvent(String eventName, ParticleEvent interactionEvent) {
+
+                            JSONObject data = null;
+                            try {
+                                //parse data to JSON
+                                data = new JSONObject(interactionEvent.dataPayload.toString());
+                                String type = data.getString("type");
+                                String zoneName = data.getString("zone");
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        toggleIcon(zoneName,type,true);
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        public void onEventError(Exception e) {
+                            Log.e("MyAPP", "Event error: ", e);
+                        }
+                    });
+
+                    return "Subscribed to detectionData";
+                } catch (IOException e) {
+                    //error subscribing
+                    Log.e("MyAPP", e.toString());
+                    return "Error subscribing!";
+                }
+            }
+        }.execute();
+
+        //interactions
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    // Subscribe to zone 1 event
+                    long event1 = ParticleCloudSDK.getCloud().subscribeToMyDevicesEvents("interactionLive", new ParticleEventHandler() {
+
+                        // Trigger this function when the event is received
+                        public void onEvent(String eventName, ParticleEvent interactionEvent) {
+
+                            JSONObject data = null;
+                            try {
+                                //parse data to JSON
+                                data = new JSONObject(interactionEvent.dataPayload.toString());
+                                String itemName = data.getString("item");
+                                String state = data.getString("state");
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        for(InteractableObject object: objects){
+                                            if(object.getName().equals(itemName)){
+                                                if(state.equals("start")) {
+                                                    object.setLight(true);
+                                                } else {
+                                                    object.setLight(false);
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        public void onEventError(Exception e) {
+                            Log.e("MyAPP", "Event error: ", e);
+                        }
+                    });
+
+                    return "Subscribed to InteractionsData";
+                } catch (IOException e) {
+                    //error subscribing
+                    Log.e("MyAPP", e.toString());
+                    return "Error subscribing!";
+                }
+            }
+        }.execute();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -484,12 +551,12 @@ public class MainActivity extends AppCompatActivity {
 
         //change activity
         switch ((String)item.getTitle()){
-            case "Location":
-                intent = new Intent(MainActivity.this,Location.class);
-                MainActivity.this.startActivity(intent);
-                break;
             case "SmartCup":
                 intent = new Intent(MainActivity.this,SmartCupActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
+            case "Location":
+                intent = new Intent(MainActivity.this,Location.class);
                 MainActivity.this.startActivity(intent);
                 break;
             case "Zone":
@@ -507,9 +574,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     private int getNearestZone(CircularBuffer zone1Wifi, CircularBuffer zone2Wifi, CircularBuffer zone3Wifi){
-        double dist1 = zone1Wifi.getAverage();
-        double dist2 = zone2Wifi.getAverage();
-        double dist3 = zone3Wifi.getAverage();
+        double dist1 = getAverageDist(zone1Wifi);
+        double dist2 = getAverageDist(zone2Wifi);
+        double dist3 = getAverageDist(zone3Wifi);
 
         if(dist1>dist2&&dist1>dist3){
             return 1;
@@ -524,5 +591,58 @@ public class MainActivity extends AppCompatActivity {
             return 4;
         }
 
+    }
+
+    private double getAverageDist(CircularBuffer buffer){
+        double total = 0;
+        for (int i=0; i<buffer.size(); i++){
+            total+=buffer.peak(i);
+        }
+        return total/buffer.size();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    private void toggleIcon(String zoneName, String type, boolean on){
+        ImageView icon;
+        int zoneNum;
+        String state = on ? "on" : "off";
+
+        if(!type.equals("motion") && !type.equals("sound")){
+            return;
+        }
+
+        switch (zoneName){
+            case "Zone1":
+                zoneNum = 1;
+                break;
+            case "Zone2":
+                zoneNum = 2;
+                break;
+            case "Zone3":
+                zoneNum = 3;
+                break;
+            default:
+                return;
+
+        }
+        icon = findViewById(getResources().getIdentifier(type + zoneNum,"id",getPackageName()));
+        icon.setImageResource(getResources().getIdentifier(type + "_" + state,"drawable",getPackageName()));
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toggleIcon(zoneName,type,false);
+            }
+        }, 500);
     }
 }

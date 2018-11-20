@@ -113,10 +113,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingTop="5dp"
+                        android:text="Humidity"
                         android:textAlignment="center"
-                        android:text="Humdity"
-                        android:textSize="30sp"
-                        android:textColor="@color/colorPrimaryDark"/>
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="30sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -180,8 +180,8 @@
                         android:paddingTop="10dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="10dp"
-                        app:gaugePointStartColor="@color/md_red_500"
-                        app:gaugePointEndColor="@color/md_red_500"
+                        app:gaugePointStartColor="@color/md_yellow_500"
+                        app:gaugePointEndColor="@color/md_yellow_500"
                         app:gaugePointSize="6"
                         app:gaugeStartAngle="135"
                         app:gaugeStrokeCap="ROUND"
@@ -206,15 +206,54 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtZ1Out"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:textAlignment="center"
-                android:text="Connecting..."
-                android:textSize="30sp"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/intBin"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:baselineAligned="false"
+                    app:srcCompat="@drawable/bin" />
+
+                <ImageView
+                    android:id="@+id/sound1"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/sound_off" />
+
+                <ImageView
+                    android:id="@+id/motion1"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/motion_off" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/users1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Users" />
+
+                    <RelativeLayout
+                        android:id="@+id/relativeZone1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -366,8 +405,8 @@
                         android:paddingTop="10dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="10dp"
-                        app:gaugePointStartColor="@color/md_red_500"
-                        app:gaugePointEndColor="@color/md_red_500"
+                        app:gaugePointStartColor="@color/md_yellow_500"
+                        app:gaugePointEndColor="@color/md_yellow_500"
                         app:gaugePointSize="6"
                         app:gaugeStartAngle="135"
                         app:gaugeStrokeCap="ROUND"
@@ -391,16 +430,54 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtZ2Out"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:textAlignment="center"
-                android:text="Connecting..."
-                android:textSize="30sp"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/intFridge"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:baselineAligned="false"
+                    app:srcCompat="@drawable/fridge" />
+
+                <ImageView
+                    android:id="@+id/sound2"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/sound_off" />
+
+                <ImageView
+                    android:id="@+id/motion2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/motion_off" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/users2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Users" />
+
+                    <RelativeLayout
+                        android:id="@+id/relativeZone2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -553,8 +630,8 @@
                         android:paddingTop="10dp"
                         android:paddingLeft="20dp"
                         android:paddingRight="10dp"
-                        app:gaugePointStartColor="@color/md_red_500"
-                        app:gaugePointEndColor="@color/md_red_500"
+                        app:gaugePointStartColor="@color/md_yellow_500"
+                        app:gaugePointEndColor="@color/md_yellow_500"
                         app:gaugePointSize="6"
                         app:gaugeStartAngle="135"
                         app:gaugeStrokeCap="ROUND"
@@ -578,16 +655,60 @@
                 </LinearLayout>
 
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/txtZ3Out"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:textAlignment="center"
-                android:text="Connecting..."
-                android:textSize="30sp"
-                android:textColor="@color/colorPrimaryDark"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/intDoor"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:baselineAligned="false"
+                    app:srcCompat="@drawable/door" />
+
+                <ImageView
+                    android:id="@+id/sound3"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/sound_off" />
+
+                <ImageView
+                    android:id="@+id/motion3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/motion_off" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_weight="5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/users3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Users" />
+
+                    <RelativeLayout
+                        android:id="@+id/relativeZone3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimary" />
 
         </LinearLayout>
     </ScrollView>

@@ -51,16 +51,14 @@ public class SmartCupActivity extends AppCompatActivity {
     private TextView one;
     private ImageView cupImage;
 
-    private int percentage = 0;
-
     private HashMap<String, Integer> todaysHistory;
 
     private boolean playing = false;
+    private float cupTilt = 0;
 
     private DatabaseReference myRef;
     private Date timeEntered = Calendar.getInstance().getTime(); //time user entered a zone
-    public static final SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy - HH:mm:ss");
-    public static final SimpleDateFormat mf = new SimpleDateFormat("dd/MM/yy");
+    public static final SimpleDateFormat mf = new SimpleDateFormat("yyyy-MM-dd");
 
     @SuppressLint("StaticFieldLeak")
     @Override
@@ -96,7 +94,7 @@ public class SmartCupActivity extends AppCompatActivity {
                         int percent = 0;
                         for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
                             if (insideSnapshot.getKey().toString().equals("ts")) {
-                                time = insideSnapshot.getValue().toString().split(" - ")[1];
+                                time = insideSnapshot.getValue().toString().split("T")[1].substring(0, 8);
                             } else if (insideSnapshot.getKey().toString().equals("percentage")) {
                                 percent = Integer.parseInt(insideSnapshot.getValue().toString());
                             }
@@ -125,6 +123,7 @@ public class SmartCupActivity extends AppCompatActivity {
                     playing = true;
                     TransitionManager.beginDelayedTransition(virtConatiner);
                     fillCupButton.setVisibility(View.GONE);
+                    cupImage.setVisibility(View.GONE);
 
                     new AsyncTask<Void, Void, String>(){
                         @Override
@@ -159,8 +158,9 @@ public class SmartCupActivity extends AppCompatActivity {
                             Toaster.s(SmartCupActivity.this, msg);
                             TransitionManager.beginDelayedTransition(virtConatiner);
                             fillCupButton.setVisibility(View.VISIBLE);
+                            cupImage.setImageResource(R.drawable.cup100);
+                            cupImage.setVisibility(View.VISIBLE);
                             playing = false;
-                            txtPercentage.setText(""+percentage);
                         }
                     }.execute();
                 }
@@ -217,7 +217,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                 data = new JSONObject(smartCupEvent.dataPayload.toString());
                                 int waterLevel = data.getInt("WaterLevel");
                                 if(data.getString("origin").equals("cup")) {
-                                    getCupData(data);
+                                    getCupData(data, waterLevel);
                                 } else if (data.getString("origin").equals("leapMotion")) {
                                     //getLeapData(data);
                                 }
@@ -227,9 +227,8 @@ public class SmartCupActivity extends AppCompatActivity {
                                     public void run() {
                                         //update UI
                                         if (!playing){
-                                            rotate(Float.intBitsToFloat((waterLevel/100)*90));
                                             updateCup(waterLevel);
-                                            //txtPercentage.setText(percentage+"%");
+                                            txtPercentage.setText(waterLevel+"%");
                                         }
                                     }
                                 });
@@ -259,21 +258,14 @@ public class SmartCupActivity extends AppCompatActivity {
             }
         }.execute();
     }
-    private void getCupData(JSONObject data) throws JSONException{
+    private void getCupData(JSONObject data, int percentage) throws JSONException{
         if (Math.abs(data.getDouble("accelXYZ")) > 1.9 && percentage == 100) {
             Toaster.s(SmartCupActivity.this, "Splash!");
         }
 
         double tilt = data.getDouble("Rotation");
 
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                cupImage.setRotation((percentage/100)*90);
-                txtPercentage.setText(tilt+"");
-            }
-        });
-
+        rotateCup((float) tilt);
         /*if (tilt > 20 && tilt <= 30) { //tilted enough to pour
             if (percentage > 80) {
                 percentage = 80;
@@ -304,7 +296,7 @@ public class SmartCupActivity extends AppCompatActivity {
     private void getLeapData(JSONObject data) throws JSONException{
         double rotation = data.getDouble("Rotation");
 
-        if(rotation>0.12){
+        /*if(rotation>0.12){
             if(percentage<=80){
                 percentage=100;
                 uploadToDatabase();
@@ -329,14 +321,7 @@ public class SmartCupActivity extends AppCompatActivity {
                 percentage=20;
                 uploadToDatabase();
             }
-        }
-    }
-
-    private void uploadToDatabase(){
-        HashMap<String, String> map = new HashMap<>();
-        map.put("ts", df.format(Calendar.getInstance().getTime()));
-        map.put("percentage", Integer.toString(percentage));
-        myRef.push().setValue(map);
+        }*/
     }
 
     private void updateCup(int value){
@@ -387,15 +372,17 @@ public class SmartCupActivity extends AppCompatActivity {
                 break;
         }
     }
-    private void rotate(float degree) {
-        final RotateAnimation rotateAnim = new RotateAnimation(0.0f, degree,
+    private void rotateCup(float degree) {
+        final RotateAnimation rotateAnim = new RotateAnimation(-cupTilt, -degree,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
 
-        rotateAnim.setDuration(2000);
-        //rotateAnim.setFillAfter(true);
-        rotateAnim.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
-        cupImage.startAnimation(rotateAnim);
+        rotateAnim.setDuration(0);
+        rotateAnim.setFillAfter(true);
+        if(!playing) {
+            cupImage.startAnimation(rotateAnim);
+        }
+        cupTilt = degree;
     }
 }
 
