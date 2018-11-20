@@ -8,6 +8,7 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,7 +51,7 @@ public class SmartCupActivity extends AppCompatActivity {
     private TextView one;
     private ImageView cupImage;
 
-    private int percentage = 100;
+    private int percentage = 0;
 
     private HashMap<String, Integer> todaysHistory;
 
@@ -172,13 +173,7 @@ public class SmartCupActivity extends AppCompatActivity {
         fillCupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                percentage = 100;
-                five.setVisibility(View.VISIBLE);
-                four.setVisibility(View.VISIBLE);
-                three.setVisibility(View.VISIBLE);
-                two.setVisibility(View.VISIBLE);
-                one.setVisibility(View.VISIBLE);
-
+                //tell photon to fill cup
                 new AsyncTask<Void, Void, String>() {
                     @Override
                     protected String doInBackground(Void... voids) {
@@ -198,13 +193,11 @@ public class SmartCupActivity extends AppCompatActivity {
                     }
                 }.execute();
 
-                /*percentage = 0;
                 five.setVisibility(View.INVISIBLE);
                 four.setVisibility(View.INVISIBLE);
                 three.setVisibility(View.INVISIBLE);
                 two.setVisibility(View.INVISIBLE);
-                one.setVisibility(View.INVISIBLE);*/
-
+                one.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -224,7 +217,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                 data = new JSONObject(smartCupEvent.dataPayload.toString());
                                 int waterLevel = data.getInt("WaterLevel");
                                 if(data.getString("origin").equals("cup")) {
-                                    //getCupData(data);
+                                    getCupData(data);
                                 } else if (data.getString("origin").equals("leapMotion")) {
                                     //getLeapData(data);
                                 }
@@ -234,6 +227,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                     public void run() {
                                         //update UI
                                         if (!playing){
+                                            rotate(Float.intBitsToFloat((waterLevel/100)*90));
                                             updateCup(waterLevel);
                                             //txtPercentage.setText(percentage+"%");
                                         }
@@ -280,7 +274,7 @@ public class SmartCupActivity extends AppCompatActivity {
             }
         });
 
-        if (tilt > 20 && tilt <= 30) { //tilted enough to pour
+        /*if (tilt > 20 && tilt <= 30) { //tilted enough to pour
             if (percentage > 80) {
                 percentage = 80;
                 uploadToDatabase();
@@ -305,7 +299,7 @@ public class SmartCupActivity extends AppCompatActivity {
                 percentage = 0;
                 uploadToDatabase();
             }
-        }
+        }*/
     }
     private void getLeapData(JSONObject data) throws JSONException{
         double rotation = data.getDouble("Rotation");
@@ -392,6 +386,16 @@ public class SmartCupActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+    private void rotate(float degree) {
+        final RotateAnimation rotateAnim = new RotateAnimation(0.0f, degree,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+
+        rotateAnim.setDuration(2000);
+        //rotateAnim.setFillAfter(true);
+        rotateAnim.setInterpolator(this, android.R.interpolator.accelerate_decelerate);
+        cupImage.startAnimation(rotateAnim);
     }
 }
 

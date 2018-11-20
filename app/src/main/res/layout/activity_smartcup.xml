@@ -49,9 +49,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
-            android:background="@drawable/cup" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/cup100" />
     </LinearLayout>
 
 
