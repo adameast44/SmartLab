@@ -20,7 +20,7 @@ public class Location extends AppCompatActivity {
 
     ListView listView;
     ArrayList<InteractionDataModel> dataModel;
-    private static customAdapterInteractions customAdapter;
+    private static CustomAdapterInteractions customAdapter;
 
     //declare variable for method
     private String Time;
@@ -74,7 +74,7 @@ public class Location extends AppCompatActivity {
                 Collections.reverse(dataModel);
 
                 //insert data into list view
-                customAdapter = new customAdapterInteractions(dataModel, getApplicationContext());
+                customAdapter = new CustomAdapterInteractions(dataModel, getApplicationContext());
                 listView.setAdapter(customAdapter);
             }
 

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/virtContainer"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/playIntake"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@color/md_blue_50"
+        android:text="Show todays intake" />
+
+    <Button
+        android:id="@+id/fillButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@color/md_blue_50"
+        android:text="Fill Cup" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="90dp">
+
+        <TextView
+            android:id="@+id/txtPercentage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            android:textColor="@color/md_blue_800"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:background="@drawable/cup" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/cupContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/boarder"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/five"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="12dp"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            android:background="@color/md_blue_600" />
+        <TextView
+            android:id="@+id/four"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            android:background="@color/md_blue_600" />
+        <TextView
+            android:id="@+id/three"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            android:background="@color/md_blue_600" />
+        <TextView
+            android:id="@+id/two"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            android:background="@color/md_blue_600" />
+        <TextView
+            android:id="@+id/one"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp"
+            android:background="@drawable/bottom_cup" />
+    </LinearLayout>
+
+</LinearLayout>

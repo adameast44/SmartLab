@@ -14,22 +14,13 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import io.particle.android.sdk.cloud.ParticleCloudSDK;
-
 //Written by Adam Eastham
 
-public class Interactions extends AppCompatActivity {
+public class InteractionsActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayList<InteractionDataModel> dataModel;
-    private static customAdapterInteractions customAdapter;
-
-    //declare variable for method
-    private String Time;
-    private String type;
-    private String zone;
-    private String date;
-    private String hms;
+    private static CustomAdapterInteractions customAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +41,12 @@ public class Interactions extends AppCompatActivity {
                 int count = 0;
                 dataModel = new ArrayList<>();
 
+                //declare variable for method
+                String Time = "";
+                String type = "";
+                String zone = "";
+                String date = "";
+                String hms = "";
 
                 for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
                     //Build string
@@ -61,14 +58,15 @@ public class Interactions extends AppCompatActivity {
                             hms = s[1];
                             hms = hms.substring(0, hms.length() - 1);
                         }
-                        else if(insideSnapshot.getKey().toString().equals("Motion")){
+                        else if(insideSnapshot.getKey().toString().equals("itemName")){
                             type = insideSnapshot.getValue().toString();
                         }
-                        else if(insideSnapshot.getKey().toString().equals("Sound")){
-                            type = insideSnapshot.getValue().toString();
-                        }
-                        else if(insideSnapshot.getKey().toString().equals("Zone")) {
-                            zone = insideSnapshot.getValue().toString();
+                        if (type.equals("Bin")) {
+                            zone = "1";
+                        } else if (type.equals("Door")) {
+                            zone = "3";
+                        } else if (type.equals("Fridge")) {
+                            zone = "2";
                         }
                     }
                     dataModel.add(new InteractionDataModel(date,hms,type,zone));
@@ -80,7 +78,7 @@ public class Interactions extends AppCompatActivity {
                 Collections.reverse(dataModel);
 
                 //insert data into list view
-                customAdapter = new customAdapterInteractions(dataModel, getApplicationContext());
+                customAdapter = new CustomAdapterInteractions(dataModel, getApplicationContext());
                 listView.setAdapter(customAdapter);
             }
 

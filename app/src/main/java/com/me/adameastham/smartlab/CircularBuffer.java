@@ -7,7 +7,6 @@ import java.nio.BufferUnderflowException;
 
 public class CircularBuffer {
 
-
     private int[] buffer;
 
     private int tail;
@@ -48,7 +47,7 @@ public class CircularBuffer {
 
     //empty the buffer
     public void empty(){
-        buffer = new int[size];
+        buffer = new int[0];
     }
 
     //return a element from a specified position in the buffer
@@ -59,5 +58,13 @@ public class CircularBuffer {
     //return the size of the buffer
     public int size(){
         return size;
+    }
+
+    public int getAverage(){
+        int total = 0;
+        for (int i=0; i<size; i++){
+            total+=buffer[i];
+        }
+        return total/size;
     }
 }

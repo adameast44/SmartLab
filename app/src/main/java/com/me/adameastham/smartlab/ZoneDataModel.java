@@ -1,51 +1,30 @@
 package com.me.adameastham.smartlab;
 
-//Written by Inkan Fung
+//Written by Inkan Fung / Adam Eastham
 
-public class ZoneDataModel {
-   String Time;
-    String AmbientLight;
-    String Humidity;
-    String Temp;
-
-    String date;
-    String hms;
-
+public class ZoneDataModel extends BaseDataModel{
+    String ambientLight;
+    String humidity;
+    String temp;
 
     public ZoneDataModel(String date, String hms, String AmbientLight, String Humidity, String Temp) {
-        this.date = date;
-        this.hms = hms;
-        this.AmbientLight=AmbientLight;
-        this.Humidity=Humidity;
-        this.Temp=Temp;
-    }
-
-
-    public String getTime() {
-        return Time;
+        super(date, hms);
+        this.ambientLight =AmbientLight;
+        this.humidity=Humidity;
+        this.temp=Temp;
     }
 
     public String getAmbientLight() {
-        return AmbientLight;
+        return ambientLight;
     }
 
     public String getHumidity() {
-        return Humidity;
+        return humidity;
     }
 
     public String getTemp() {
-        return Temp;
+        return temp;
     }
 
-    public String getdate() {
-
-        return date;
-
-    }
-
-    public String gethms() {
-
-        return hms;
-    }
 }
 

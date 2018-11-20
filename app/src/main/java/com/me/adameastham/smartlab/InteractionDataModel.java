@@ -1,9 +1,8 @@
 package com.me.adameastham.smartlab;
 
-//Written by Inkan Fung
+//Written by Inkan Fung / Adam Eastham
 
-public class InteractionDataModel {
-    String time;
+public class InteractionDataModel extends BaseDataModel{
     String type;
     String zone;
 
@@ -12,15 +11,9 @@ public class InteractionDataModel {
 
 
     public InteractionDataModel(String date, String hms, String type, String zone) {
-        this.date = date;
-        this.hms = hms;
+        super(date, hms);
         this.type=type;
         this.zone=zone;
-    }
-
-
-    public String getTime() {
-        return time;
     }
 
     public String getType() {
@@ -29,15 +22,6 @@ public class InteractionDataModel {
 
     public String getZone() {
         return zone;
-    }
-
-
-    public String getdate() {
-        return date;
-    }
-
-    public String gethms() {
-        return hms;
     }
 }
 

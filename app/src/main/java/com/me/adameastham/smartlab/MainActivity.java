@@ -3,10 +3,8 @@ package com.me.adameastham.smartlab;
 //Written by Adam Eastham
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.TransitionManager;
@@ -15,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,18 +22,11 @@ import android.widget.ToggleButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import io.particle.android.sdk.cloud.ParticleCloudSDK;
-import io.particle.android.sdk.cloud.ParticleEvent;
-import io.particle.android.sdk.cloud.ParticleEventHandler;
 import io.particle.android.sdk.cloud.exceptions.ParticleCloudException;
 import io.particle.android.sdk.utils.Toaster;
 import pl.pawelkleczkowski.customgauge.CustomGauge;
@@ -245,8 +235,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }.execute();
 
-        new AsyncTask<Void, Void, String>() {
-
+        /*new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
@@ -477,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }, 2000);
             }
-        }.execute();
+        }.execute();*/
 
     }
 
@@ -499,20 +488,16 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this,Location.class);
                 MainActivity.this.startActivity(intent);
                 break;
-            case "Zone 1":
-                intent = new Intent(MainActivity.this,Zone1.class);
+            case "SmartCup":
+                intent = new Intent(MainActivity.this,SmartCupActivity.class);
                 MainActivity.this.startActivity(intent);
                 break;
-            case "Zone 2":
-                intent = new Intent(MainActivity.this,Zone2.class);
-                MainActivity.this.startActivity(intent);
-                break;
-            case "Zone 3":
-                intent = new Intent(MainActivity.this,Zone3.class);
+            case "Zone":
+                intent = new Intent(MainActivity.this,ZoneActivity.class);
                 MainActivity.this.startActivity(intent);
                 break;
             case "Interactions":
-                intent = new Intent(MainActivity.this,Interactions.class);
+                intent = new Intent(MainActivity.this,InteractionsActivity.class);
                 MainActivity.this.startActivity(intent);
                 break;
             default:
@@ -522,9 +507,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     private int getNearestZone(CircularBuffer zone1Wifi, CircularBuffer zone2Wifi, CircularBuffer zone3Wifi){
-        double dist1 = getAverageDist(zone1Wifi);
-        double dist2 = getAverageDist(zone2Wifi);
-        double dist3 = getAverageDist(zone3Wifi);
+        double dist1 = zone1Wifi.getAverage();
+        double dist2 = zone2Wifi.getAverage();
+        double dist3 = zone3Wifi.getAverage();
 
         if(dist1>dist2&&dist1>dist3){
             return 1;
@@ -539,23 +524,5 @@ public class MainActivity extends AppCompatActivity {
             return 4;
         }
 
-    }
-
-    private double getAverageDist(CircularBuffer buffer){
-        double total = 0;
-        for (int i=0; i<buffer.size(); i++){
-            total+=buffer.peak(i);
-        }
-        return total/buffer.size();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 }

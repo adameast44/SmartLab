@@ -12,22 +12,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-//Written by Adam Eastham
 
-public class customAdapterInteractions extends ArrayAdapter<InteractionDataModel> implements View.OnClickListener{
 
-    private ArrayList<InteractionDataModel> dataSet;
+/**
+ * Created by user on 10/31/2018.
+ * this file is created to customise the Listview in an custom adapter
+ */
+
+public class CustomAdapterZones extends ArrayAdapter<ZoneDataModel> implements View.OnClickListener{
+
+    private ArrayList<ZoneDataModel> dataSet;
     Context mContext;
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txtTime;
-        TextView txtType;
-        TextView txtZone;
+        TextView txttime;
+        TextView txttemp;
+        TextView txtambientlight;
+        TextView txthumidity;
     }
 
-    public customAdapterInteractions(ArrayList<InteractionDataModel> data, Context context) {
-        super(context, R.layout.list_item_layout_interactions, data);
+    public CustomAdapterZones(ArrayList<ZoneDataModel> data, Context context) {
+        super(context, R.layout.list_item_layout, data);
         this.dataSet = data;
         this.mContext=context;
 
@@ -42,7 +48,7 @@ public class customAdapterInteractions extends ArrayAdapter<InteractionDataModel
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        InteractionDataModel interactionDataModel = getItem(position);
+        ZoneDataModel zoneDataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -52,10 +58,11 @@ public class customAdapterInteractions extends ArrayAdapter<InteractionDataModel
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item_layout_interactions, parent, false);
-            viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
-            viewHolder.txtType = (TextView) convertView.findViewById(R.id.type);
-            viewHolder.txtZone = (TextView) convertView.findViewById(R.id.zone);
+            convertView = inflater.inflate(R.layout.list_item_layout, parent, false);
+            viewHolder.txttime = (TextView) convertView.findViewById(R.id.time);
+            viewHolder.txttemp = (TextView) convertView.findViewById(R.id.temp);
+            viewHolder.txtambientlight = (TextView) convertView.findViewById(R.id.light);
+            viewHolder.txthumidity = (TextView) convertView.findViewById(R.id.humidity);
 
             result=convertView;
 
@@ -69,9 +76,10 @@ public class customAdapterInteractions extends ArrayAdapter<InteractionDataModel
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.txtTime.setText(interactionDataModel.getdate() + ("\n") + interactionDataModel.gethms());
-        viewHolder.txtType.setText(interactionDataModel.getType());
-        viewHolder.txtZone.setText(interactionDataModel.getZone());
+        viewHolder.txttime.setText(zoneDataModel.getdate() + ("\n") + zoneDataModel.gethms());
+        viewHolder.txttemp.setText(zoneDataModel.getTemp());
+        viewHolder.txtambientlight.setText(zoneDataModel.getAmbientLight());
+        viewHolder.txthumidity.setText(zoneDataModel.getHumidity());
         // Return the completed view to render on screen
         return convertView;
     }

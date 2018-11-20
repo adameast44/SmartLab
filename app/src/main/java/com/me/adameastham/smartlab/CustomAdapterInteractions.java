@@ -12,36 +12,28 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+//Written by Adam Eastham
 
+public class CustomAdapterInteractions extends ArrayAdapter<InteractionDataModel> implements View.OnClickListener{
 
-/**
- * Created by user on 10/31/2018.
- * this file is created to customise the Listview in an custom adapter
- */
-
-public class customAdapterZones extends ArrayAdapter<ZoneDataModel> implements View.OnClickListener{
-
-    private ArrayList<ZoneDataModel> dataSet;
+    private ArrayList<InteractionDataModel> dataSet;
     Context mContext;
 
     // View lookup cache
     private static class ViewHolder {
-        TextView txttime;
-        TextView txttemp;
-        TextView txtambientlight;
-        TextView txthumidity;
+        TextView txtTime;
+        TextView txtType;
+        TextView txtZone;
     }
 
-    public customAdapterZones(ArrayList<ZoneDataModel> data, Context context) {
-        super(context, R.layout.list_item_layout, data);
+    public CustomAdapterInteractions(ArrayList<InteractionDataModel> data, Context context) {
+        super(context, R.layout.list_item_layout_interactions, data);
         this.dataSet = data;
         this.mContext=context;
-
     }
 
     @Override
     public void onClick(View v) {
-
 
     }
 
@@ -50,7 +42,7 @@ public class customAdapterZones extends ArrayAdapter<ZoneDataModel> implements V
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        ZoneDataModel zoneDataModel = getItem(position);
+        InteractionDataModel interactionDataModel = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
@@ -60,11 +52,10 @@ public class customAdapterZones extends ArrayAdapter<ZoneDataModel> implements V
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.list_item_layout, parent, false);
-            viewHolder.txttime = (TextView) convertView.findViewById(R.id.time);
-            viewHolder.txttemp = (TextView) convertView.findViewById(R.id.temp);
-            viewHolder.txtambientlight = (TextView) convertView.findViewById(R.id.light);
-            viewHolder.txthumidity = (TextView) convertView.findViewById(R.id.humidity);
+            convertView = inflater.inflate(R.layout.list_item_layout_interactions, parent, false);
+            viewHolder.txtTime = (TextView) convertView.findViewById(R.id.time);
+            viewHolder.txtType = (TextView) convertView.findViewById(R.id.type);
+            viewHolder.txtZone = (TextView) convertView.findViewById(R.id.zone);
 
             result=convertView;
 
@@ -78,10 +69,9 @@ public class customAdapterZones extends ArrayAdapter<ZoneDataModel> implements V
         result.startAnimation(animation);
         lastPosition = position;
 
-        viewHolder.txttime.setText(zoneDataModel.getdate() + ("\n") + zoneDataModel.gethms());
-        viewHolder.txttemp.setText(zoneDataModel.getTemp());
-        viewHolder.txtambientlight.setText(zoneDataModel.getAmbientLight());
-        viewHolder.txthumidity.setText(zoneDataModel.getHumidity());
+        viewHolder.txtTime.setText(interactionDataModel.getdate() + ("\n") + interactionDataModel.gethms());
+        viewHolder.txtType.setText(interactionDataModel.getType());
+        viewHolder.txtZone.setText(interactionDataModel.getZone());
         // Return the completed view to render on screen
         return convertView;
     }

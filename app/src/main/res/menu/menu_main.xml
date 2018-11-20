@@ -1,22 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.me.adameastham.payrollin.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/SmartCup"
+        android:title="SmartCup"
+        app:showAsAction="always" />
     <item
         android:id="@+id/Location"
         android:title="Location"
         app:showAsAction="always" />
     <item
-        android:id="@+id/zone1"
-        android:title="Zone 1"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/zone2"
-        android:title="Zone 2"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/zone3"
-        android:title="Zone 3"
+        android:id="@+id/zone"
+        android:title="Zone"
         app:showAsAction="always" />
     <item
         android:id="@+id/Interactions"
