@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone1T1;
     private TextView zone1T2;
     private TextView zone1T3;
-    private TextView zone1View;
+    private LinearLayout zone1Users;
 
     private CustomGauge zone2G1;
     private CustomGauge zone2G2;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone2T1;
     private TextView zone2T2;
     private TextView zone2T3;
-    private TextView zone2View;
+    private LinearLayout zone2Users;
 
     private CustomGauge zone3G1;
     private CustomGauge zone3G2;
@@ -75,12 +76,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone3T1;
     private TextView zone3T2;
     private TextView zone3T3;
-    private TextView zone3View;
+    private LinearLayout zone3Users;
 
     private TextView txtEnterName;
     private EditText txtHotspotName;
     private ToggleButton togButton;
     private ToggleButton togStartStop;
+    private ImageView userImg;
 
     private final int MOTION_TYPE = 0;
     private final int SOUND_TYPE = 1;
@@ -108,11 +110,14 @@ public class MainActivity extends AppCompatActivity {
         objects.add(new InteractableObject("Door", findViewById(R.id.intDoor)));
 
         boolean isLoggedIn = false;
-        txtWifi = findViewById(R.id.txtWifi);
         transContainer = findViewById(R.id.container);
         zoneContainer = findViewById(R.id.zoneContainer);
         txtEnterName = findViewById(R.id.txtEnterName);
         txtHotspotName = findViewById(R.id.txtHotspotName);
+
+        userImg = new ImageView(this);
+        userImg.setImageResource(R.drawable.user);
+        userImg.setColorFilter(ContextCompat.getColor(userImg.getContext(), R.color.md_red_500));
 
         //Zone 1 UI elements
         zone1T1 = findViewById(R.id.zone1T1);
@@ -121,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         zone1G1 = findViewById(R.id.zone1G1);
         zone1G2 = findViewById(R.id.zone1G2);
         zone1G3 = findViewById(R.id.zone1G3);
-        zone1View = findViewById(R.id.zone1View);
+        zone1Users = findViewById(R.id.relativeZone1);
         zone1G1.setEndValue(100);
         zone1G2.setEndValue(100);
         zone1G3.setEndValue(100);
@@ -133,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         zone2G1 = findViewById(R.id.zone2G1);
         zone2G2 = findViewById(R.id.zone2G2);
         zone2G3 = findViewById(R.id.zone2G3);
-        zone2View = findViewById(R.id.zone2View);
+        zone2Users = findViewById(R.id.relativeZone2);
         zone2G1.setEndValue(100);
         zone2G2.setEndValue(100);
         zone2G3.setEndValue(100);
@@ -145,16 +150,13 @@ public class MainActivity extends AppCompatActivity {
         zone3G1 = findViewById(R.id.zone3G1);
         zone3G2 = findViewById(R.id.zone3G2);
         zone3G3 = findViewById(R.id.zone3G3);
-        zone3View = findViewById(R.id.zone3View);
+        zone3Users = findViewById(R.id.relativeZone3);
         zone3G1.setEndValue(100);
         zone3G2.setEndValue(100);
         zone3G3.setEndValue(100);
 
         //arange UI
         transContainer.setVisibility(View.GONE);
-        zone1View.setVisibility(View.GONE);
-        zone2View.setVisibility(View.GONE);
-        zone3View.setVisibility(View.GONE);
 
         //connect to firebase
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("locationData/");
@@ -209,16 +211,13 @@ public class MainActivity extends AppCompatActivity {
                     togButton.setVisibility(View.VISIBLE);
                     txtHotspotName.setVisibility(View.VISIBLE);
                     txtEnterName.setVisibility(View.VISIBLE);
-                    txtWifi.setVisibility(View.GONE);
-                    zone1View.setVisibility(View.GONE);
-                    zone2View.setVisibility(View.GONE);
-                    zone3View.setVisibility(View.GONE);
                     //empty buffers
                     zone1Wifi.empty();
                     zone2Wifi.empty();
                     zone3Wifi.empty();
                 }
             }
+
         });
         togStartStop.setChecked(false);
 
@@ -287,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (nearest != currentZone && togStartStop.isChecked() && zone1Wifi.peak(zone1Wifi.size()-1)!=0){ //zone switch
                                             currentZone = nearest;
                                             if (currentZone!=4) {
-                                                txtWifi.setText("In Zone " + currentZone);
+                                                togButton.setText("In Zone " + currentZone);
                                                 HashMap<String, String> map = new HashMap<>();
                                                 map.put("Name", hotspotName);
                                                 map.put("ts", df.format(Calendar.getInstance().getTime()));
@@ -295,28 +294,24 @@ public class MainActivity extends AppCompatActivity {
                                                 myRef.push().setValue(map);
                                             }
                                             else{
-                                                txtWifi.setText("Unkown Location");
+                                                togButton.setText("Unkown Location");
                                             }
+
+                                            //remove the user from its current zone
+                                            if(userImg.getParent() != null) ((LinearLayout) userImg.getParent()).removeView(userImg);
+
                                             switch(currentZone){
                                                 case 1:
-                                                    zone1View.setBackgroundResource(R.color.md_green_500);
-                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone1Users.addView(userImg);
                                                     break;
                                                 case 2:
-                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone2View.setBackgroundResource(R.color.md_green_500);
-                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+                                                    zone2Users.addView(userImg);
                                                     break;
                                                 case 3:
-                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone3View.setBackgroundResource(R.color.md_green_500);
+                                                    zone3Users.addView(userImg);
                                                     break;
                                                 default:
-                                                    zone1View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone2View.setBackgroundResource(R.color.md_grey_300);
-                                                    zone3View.setBackgroundResource(R.color.md_grey_300);
+
                                                     break;
                                             }
                                         }
@@ -456,11 +451,12 @@ public class MainActivity extends AppCompatActivity {
                                 data = new JSONObject(interactionEvent.dataPayload.toString());
                                 String type = data.getString("type");
                                 String zoneName = data.getString("zone");
+                                String state = data.getString("state");
 
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        toggleIcon(zoneName,type,true);
+                                        toggleIcon(zoneName,type,state.equals("on"));
                                     }
                                 });
                             } catch (JSONException e) {
@@ -635,13 +631,5 @@ public class MainActivity extends AppCompatActivity {
         }
         icon = findViewById(getResources().getIdentifier(type + zoneNum,"id",getPackageName()));
         icon.setImageResource(getResources().getIdentifier(type + "_" + state,"drawable",getPackageName()));
-
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                toggleIcon(zoneName,type,false);
-            }
-        }, 500);
     }
 }
