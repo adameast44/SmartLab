@@ -22,7 +22,7 @@
         </activity>
         <activity
             android:name=".SmartCupActivity"
-            android:label="Interactions"
+            android:label="Smart Cup"
             android:screenOrientation="portrait" />
         <activity
             android:name=".InteractionsActivity"

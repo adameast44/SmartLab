@@ -3,9 +3,9 @@ package com.me.adameastham.smartlab;
 //Written by Inkan Fung / Adam Eastham
 
 public class ZoneDataModel extends BaseDataModel{
-    String ambientLight;
-    String humidity;
-    String temp;
+    private String ambientLight;
+    private String humidity;
+    private String temp;
 
     public ZoneDataModel(String date, String hms, String AmbientLight, String Humidity, String Temp) {
         super(date, hms);

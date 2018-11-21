@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity {
                     zone3Wifi.empty();
                 }
             }
-
         });
         togStartStop.setChecked(false);
 
