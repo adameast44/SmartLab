@@ -4,11 +4,13 @@ package com.me.adameastham.smartlab;
 
 public class SmartCupDataModel{
     private String time;
-    private int percantage;
+    private int percentage;
+    private int temp;
 
-    public SmartCupDataModel(String time, int percentage) {
+    public SmartCupDataModel(String time, int percentage, int temp) {
         this.time = time;
-        this.percantage = percentage;
+        this.percentage = percentage;
+        this.temp = temp;
     }
 
     public String getTime() {
@@ -16,8 +18,11 @@ public class SmartCupDataModel{
     }
 
     public int getPercentage() {
-        return percantage;
+        return percentage;
     }
 
+    public int getTemp() {
+        return temp;
+    }
 }
 

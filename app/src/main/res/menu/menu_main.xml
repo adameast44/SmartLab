@@ -2,6 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <item
+        android:id="@+id/Control"
+        android:title="Control"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/SmartCup"
         android:title="SmartCup"
         app:showAsAction="always" />

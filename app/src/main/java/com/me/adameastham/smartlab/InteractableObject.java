@@ -23,4 +23,8 @@ public class InteractableObject {
     public String getName() {
         return name;
     }
+
+    public ImageView getImageView() {
+        return imageView;
+    }
 }

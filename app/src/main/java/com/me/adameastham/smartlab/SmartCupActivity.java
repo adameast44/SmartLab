@@ -43,6 +43,7 @@ public class SmartCupActivity extends AppCompatActivity {
     private Button fillCupButton;
     private ToggleButton playIntake;
     private TextView txtPercentage;
+    private TextView txtTemp;
     private ViewGroup cupContainer;
     private ViewGroup virtConatiner;
     private TextView five;
@@ -57,6 +58,7 @@ public class SmartCupActivity extends AppCompatActivity {
     private boolean playing = false;
     private float cupTilt = 0;
     private AsyncTask thread;
+    private int lastCupTemp = 0;
 
     //database objects
     private DatabaseReference myRef;
@@ -75,6 +77,7 @@ public class SmartCupActivity extends AppCompatActivity {
         cupImage.setImageResource(R.drawable.cup100);
 
         txtPercentage = findViewById(R.id.txtPercentage);
+        txtTemp = findViewById(R.id.txtTemp);
         cupContainer = findViewById(R.id.cupContainer);
         five = findViewById(R.id.five);
         four = findViewById(R.id.four);
@@ -97,14 +100,17 @@ public class SmartCupActivity extends AppCompatActivity {
                         //retrieve data
                         String time = "";
                         int percent = 0;
+                        int temp = 0;
                         for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
                             if (insideSnapshot.getKey().toString().equals("ts")) {
                                 time = insideSnapshot.getValue().toString().split("T")[1].substring(0, 8);
                             } else if (insideSnapshot.getKey().toString().equals("percentage")) {
                                 percent = Integer.parseInt(insideSnapshot.getValue().toString());
+                            } else if (insideSnapshot.getKey().toString().equals("temp")) {
+                                temp = (int)Double.parseDouble(insideSnapshot.getValue().toString());
                             }
                         }
-                        todaysHistory.add(new SmartCupDataModel(time, percent));
+                        todaysHistory.add(new SmartCupDataModel(time, percent, temp));
                     }
                 }
 
@@ -141,6 +147,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                     if (!isCancelled()) {
                                         int level = todaysHistory.get(i).getPercentage();
                                         String time = todaysHistory.get(i).getTime();
+                                        int temp = todaysHistory.get(i).getTemp();
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -148,6 +155,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                                 cupImage.refreshDrawableState();
                                                 updateCup(level);
                                                 txtPercentage.setText("Time: " + time);
+                                                txtTemp.setText(temp + "°C");
                                             }
                                         });
                                         try {
@@ -184,6 +192,7 @@ public class SmartCupActivity extends AppCompatActivity {
                     cupImage.setImageResource(R.drawable.cup100);
                     cupImage.setVisibility(View.VISIBLE);
                     txtPercentage.setText("");
+                    txtTemp.setText("");
                     playing = false;
                 }
             }
@@ -238,8 +247,9 @@ public class SmartCupActivity extends AppCompatActivity {
                                 //parse data to JSON
                                 data = new JSONObject(smartCupEvent.dataPayload.toString());
                                 int waterLevel = data.getInt("WaterLevel");
+                                int temp = data.getInt("temp");
                                 if (!playing) {
-                                    getCupData(data, waterLevel);
+                                    getCupData(data);
 
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -247,6 +257,7 @@ public class SmartCupActivity extends AppCompatActivity {
                                             //update UI
                                             updateCup(waterLevel);
                                             txtPercentage.setText(waterLevel + "%");
+                                            txtTemp.setText(temp + "°C");
                                         }
                                     });
                                 }
@@ -276,13 +287,17 @@ public class SmartCupActivity extends AppCompatActivity {
             }
         }.execute();
     }
-    private void getCupData(JSONObject data, int percentage) throws JSONException{
-        if (Math.abs(data.getDouble("accelXYZ")) > 1.9 && percentage!=0) {
+    private void getCupData(JSONObject data) throws JSONException{
+        if (Math.abs(data.getDouble("accelXYZ")) > 1.9 && data.getInt("WaterLevel")!=0) {
             Toaster.s(SmartCupActivity.this, "Splash!");
         }
 
-        double tilt = data.getDouble("Rotation");
+        if (data.getInt("temp") <= 27 && lastCupTemp > 27 && data.getInt("WaterLevel") == 100){
+            Toaster.s(SmartCupActivity.this, "Don't forget about your brew!");
+        }
+        lastCupTemp = data.getInt("temp");
 
+        double tilt = data.getDouble("Rotation");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

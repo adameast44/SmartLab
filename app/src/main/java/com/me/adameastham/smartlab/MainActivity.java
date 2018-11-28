@@ -3,10 +3,10 @@ package com.me.adameastham.smartlab;
 //Written by Adam Eastham
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -25,8 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone1T2;
     private TextView zone1T3;
     private LinearLayout zone1Users;
+    private String lastBin;
 
     private CustomGauge zone2G1;
     private CustomGauge zone2G2;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone2T2;
     private TextView zone2T3;
     private LinearLayout zone2Users;
+    private String lastFridge;
 
     private CustomGauge zone3G1;
     private CustomGauge zone3G2;
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView zone3T2;
     private TextView zone3T3;
     private LinearLayout zone3Users;
+    private String lastDoor;
 
     private TextView txtEnterName;
     private EditText txtHotspotName;
@@ -130,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         zone1G1.setEndValue(100);
         zone1G2.setEndValue(100);
         zone1G3.setEndValue(100);
+        lastBin = "NaN";
 
         //Zone 2 UI elements
         zone2T1 = findViewById(R.id.zone2T1);
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
         zone2G1.setEndValue(100);
         zone2G2.setEndValue(100);
         zone2G3.setEndValue(100);
+        lastFridge = "NaN";
 
         //Zone 3 UI elements
         zone3T1 = findViewById(R.id.zone3T1);
@@ -154,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         zone3G1.setEndValue(100);
         zone3G2.setEndValue(100);
         zone3G3.setEndValue(100);
+        lastDoor = "NaN";
 
         //arange UI
         transContainer.setVisibility(View.GONE);
@@ -220,6 +228,74 @@ public class MainActivity extends AppCompatActivity {
 
         });
         togStartStop.setChecked(false);
+
+        DatabaseReference interRef = FirebaseDatabase.getInstance().getReference("interaction/");
+        interRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                for (DataSnapshot singleSnapshot: dataSnapshot.getChildren()) {
+                    //Build string
+
+                    String itemName = "";
+                    String ts = "NaN";
+                    String date;
+                    String hms;
+                    for (DataSnapshot insideSnapshot : singleSnapshot.getChildren()) {
+                        if (insideSnapshot.getKey().toString().equals("itemName")){
+                            itemName = insideSnapshot.getValue().toString();
+                        } else if(insideSnapshot.getKey().toString().equals("ts")){
+                            ts = insideSnapshot.getValue().toString();
+                            String s[] = ts.split("T");
+                            date = s[0];
+                            hms = s[1];
+                            hms = hms.substring(0, hms.length() - 5);
+                            ts = date + "\n" + hms;
+                        }
+                    }
+                    switch (itemName){
+                        case "Bin":
+                            lastBin = ts;
+                            break;
+                        case "Fridge":
+                            lastFridge = ts;
+                            break;
+                        case "Door":
+                            lastDoor = ts;
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Failed to read value
+                Log.w("MyApp", "Failed to read value.", databaseError.toException());
+            }
+        });
+
+        for(InteractableObject intObj: objects){
+            intObj.getImageView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String msg = "";
+                    switch (intObj.getName()){
+                        case "Bin":
+                            msg = "Bin accessed:\n" + lastBin;
+                            break;
+                        case "Fridge":
+                            msg = "Fridge accessed:\n" + lastFridge;
+                            break;
+                        case "Door":
+                            msg = "Door accessed:\n" + lastDoor;
+                            break;
+                    }
+                    Toaster.s(MainActivity.this, msg);
+                }
+            });
+        }
+
 
         ParticleCloudSDK.init(this);
         //Login to Particle
@@ -546,6 +622,10 @@ public class MainActivity extends AppCompatActivity {
 
         //change activity
         switch ((String)item.getTitle()){
+            case "Control":
+                intent = new Intent(MainActivity.this,ControlBoardActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
             case "SmartCup":
                 intent = new Intent(MainActivity.this,SmartCupActivity.class);
                 MainActivity.this.startActivity(intent);
