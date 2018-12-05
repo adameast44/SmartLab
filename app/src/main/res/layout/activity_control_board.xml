@@ -3,6 +3,8 @@
     android:id="@+id/mainCont"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,18 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
         android:orientation="vertical">
 
         <Switch
             android:id="@+id/switchKet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
             android:checked="true"
-            android:textSize="25sp"
+            android:textSize="30sp"
             android:textAlignment="center"
             android:text="Kettle"
             android:textOn="ON!"
@@ -29,11 +27,10 @@
 
 
         <LinearLayout
-            android:id="@+id/kettleButtons"
+            android:id="@+id/kettleTemps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <Button
@@ -41,6 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
+                android:backgroundTint="@color/md_red_300"
                 android:text="65°C"/>
 
             <Button
@@ -48,6 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
+                android:backgroundTint="@color/md_red_400"
                 android:text="80°C"/>
 
             <Button
@@ -55,6 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
+                android:backgroundTint="@color/md_red_600"
                 android:text="95°C"/>
 
             <Button
@@ -62,10 +65,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textSize="20sp"
+                android:backgroundTint="@color/md_red_800"
                 android:text="100°C"/>
 
         </LinearLayout>
-    </LinearLayout>
+            android:id="@+id/kettleWarmths"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ketWarm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="17sp"
+                android:backgroundTint="@color/md_blue_300"
+                android:text="Keep Warm"/>
+        </LinearLayout>
 
     <Switch
         android:id="@+id/switchAll"
@@ -73,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:checked="true"
-        android:textSize="25sp"
+        android:textSize="30sp"
         android:padding="10dp"
         android:textAlignment="center"
         android:text="All Zones"
@@ -86,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:checked="true"
-        android:textSize="25sp"
+        android:textSize="30sp"
         android:padding="10dp"
         android:text="Zone 2"
         android:textOn="ON!"
@@ -96,6 +115,8 @@
         android:id="@+id/colour1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         />
 
@@ -104,6 +125,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:scrollbarSize="100dp"
+        android:progressDrawable="@drawable/seek_bar"
+        android:thumb="@drawable/seek_thumb"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         />
@@ -114,7 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:checked="true"
-        android:textSize="25sp"
+        android:textSize="30sp"
         android:padding="10dp"
         android:text="Zone 3"
         android:textOn="ON!"
@@ -124,6 +148,8 @@
         android:id="@+id/colour2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         />
 
@@ -132,6 +158,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:progressDrawable="@drawable/seek_bar"
+        android:thumb="@drawable/seek_thumb"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         />
@@ -142,5 +170,18 @@
         android:textColor="@color/md_black_1000"
         android:text="Hello World"
         android:id="@+id/txtOutput"/>
+
+    <ToggleButton
+        android:id="@+id/togStartStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@color/md_green_300"
+        android:textSize="30sp"
+        android:textOn="Fan Off"
+        android:textOff="Fan On" />
 
 </LinearLayout>
